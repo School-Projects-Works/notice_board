@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "220581760995",
+    "project_id": "onnline-notice-board",
+    "storage_bucket": "onnline-notice-board.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:220581760995:android:f16b73f637a6b7bc699ad6",
+        "android_client_info": {
+          "package_name": "com.fuse.notice_board"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClGflPLDrgChygXfbDxHy6650ex6C8ZBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
