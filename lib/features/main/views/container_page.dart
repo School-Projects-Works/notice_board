@@ -37,10 +37,10 @@ class ContainerPage extends ConsumerWidget {
       // for (var item in data) {
       //   await AffiliationServices.addAffiliation(item);
       // }
-      // var data = NoticeModel.dummyNotice();
-      // for (var item in data) {
-      //   await NoticeServices.addNotice(item);
-      // }
+      var data = NoticeModel.dummyNotice();
+      for (var item in data) {
+        await NoticeServices.addNotice(item);
+      }
       return true;
     } catch (e) {
       return false;

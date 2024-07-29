@@ -67,7 +67,6 @@ We look forward to a productive and enjoyable year ahead!
   {
     "title": "Library Hours Update",
     "content": """
-# Library Hours Update
 
 Dear Students,
 
@@ -86,7 +85,6 @@ Happy Studying!
   {
     "title": "Upcoming Career Fair",
     "content": """
-# Upcoming Career Fair
 
 Attention all students!
 
@@ -109,7 +107,6 @@ We hope to see you all there!
   {
     "title": "Midterm Exam Schedule",
     "content": """
-# Midterm Exam Schedule
 
 Dear Students,
 
@@ -132,7 +129,6 @@ Prepare well and good luck!
   {
     "title": "New Cafeteria Menu",
     "content": """
-# New Cafeteria Menu
 
 We are excited to introduce a **new menu** at the university cafeteria. The new menu includes a variety of healthy and delicious options.
 
@@ -150,7 +146,6 @@ Bon Appétit!
   {
     "title": "Guest Lecture: Dr. Jane Smith",
     "content": """
-# Guest Lecture: Dr. Jane Smith
 
 We are honored to host **Dr. Jane Smith**, a renowned expert in **Artificial Intelligence**, for a guest lecture on **September 20**.
 
@@ -173,7 +168,6 @@ Don't miss this opportunity to learn from a leading expert!
       'https://piedmontcc.edu/wp-content/uploads/2023/09/PCC-Campus-Safety-Tips-Flyer-2023-.png'
     ],
     "content": """
-# Campus Safety Guidelines
 
 The safety of our students and staff is our top priority. Please adhere to the following guidelines to ensure a safe campus environment.
 
@@ -196,7 +190,6 @@ Stay safe and healthy!
       'https://pbs.twimg.com/media/FmGnRcUWIAE0dRq.jpg'
     ],
     "content": """
-# Join the University Choir
 
 Do you love singing? Join the **university choir** and be a part of an amazing musical journey.
 
@@ -236,7 +229,6 @@ Thank you for your cooperation!
   {
     "title": "Student Exchange Program",
     "content": """
-# Student Exchange Program
 
 Explore new cultures and enhance your academic experience by participating in the **Student Exchange Program**.
 

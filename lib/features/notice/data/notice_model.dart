@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:notice_board/features/notice/services/notice_services.dart';
 
 import '../../../constants/constant_data.dart';
@@ -12,6 +14,7 @@ class NoticeModel {
   String posterId;
   String posterName;
   String contact;
+  String? email;
   List<String> affliation;
   List<String> images;
   int createdAt;
@@ -22,6 +25,7 @@ class NoticeModel {
     required this.posterId,
     required this.posterName,
     required this.contact,
+    this.email,
     this.affliation = const [],
     this.images = const [],
     required this.createdAt,
@@ -34,6 +38,7 @@ class NoticeModel {
     String? posterId,
     String? posterName,
     String? contact,
+    String? email,
     List<String>? affliation,
     List<String>? images,
     int? createdAt,
@@ -45,6 +50,7 @@ class NoticeModel {
       posterId: posterId ?? this.posterId,
       posterName: posterName ?? this.posterName,
       contact: contact ?? this.contact,
+      email: email ?? this.email,
       affliation: affliation ?? this.affliation,
       images: images ?? this.images,
       createdAt: createdAt ?? this.createdAt,
@@ -53,17 +59,20 @@ class NoticeModel {
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
-
+  
     result.addAll({'id': id});
     result.addAll({'title': title});
     result.addAll({'description': description});
     result.addAll({'posterId': posterId});
     result.addAll({'posterName': posterName});
     result.addAll({'contact': contact});
+    if(email != null){
+      result.addAll({'email': email});
+    }
     result.addAll({'affliation': affliation});
     result.addAll({'images': images});
     result.addAll({'createdAt': createdAt});
-
+  
     return result;
   }
 
@@ -75,6 +84,7 @@ class NoticeModel {
       posterId: map['posterId'] ?? '',
       posterName: map['posterName'] ?? '',
       contact: map['contact'] ?? '',
+      email: map['email'],
       affliation: List<String>.from(map['affliation']),
       images: List<String>.from(map['images']),
       createdAt: map['createdAt']?.toInt() ?? 0,
@@ -88,36 +98,38 @@ class NoticeModel {
 
   @override
   String toString() {
-    return 'NoticeModel(id: $id, title: $title, description: $description, posterId: $posterId, posterName: $posterName, contact: $contact, affliation: $affliation, images: $images, createdAt: $createdAt)';
+    return 'NoticeModel(id: $id, title: $title, description: $description, posterId: $posterId, posterName: $posterName, contact: $contact, email: $email, affliation: $affliation, images: $images, createdAt: $createdAt)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
+  
     return other is NoticeModel &&
-        other.id == id &&
-        other.title == title &&
-        other.description == description &&
-        other.posterId == posterId &&
-        other.posterName == posterName &&
-        other.contact == contact &&
-        listEquals(other.affliation, affliation) &&
-        listEquals(other.images, images) &&
-        other.createdAt == createdAt;
+      other.id == id &&
+      other.title == title &&
+      other.description == description &&
+      other.posterId == posterId &&
+      other.posterName == posterName &&
+      other.contact == contact &&
+      other.email == email &&
+      listEquals(other.affliation, affliation) &&
+      listEquals(other.images, images) &&
+      other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        title.hashCode ^
-        description.hashCode ^
-        posterId.hashCode ^
-        posterName.hashCode ^
-        contact.hashCode ^
-        affliation.hashCode ^
-        images.hashCode ^
-        createdAt.hashCode;
+      title.hashCode ^
+      description.hashCode ^
+      posterId.hashCode ^
+      posterName.hashCode ^
+      contact.hashCode ^
+      email.hashCode ^
+      affliation.hashCode ^
+      images.hashCode ^
+      createdAt.hashCode;
   }
 
   static List<NoticeModel> dummyNotice() {
@@ -134,8 +146,8 @@ class NoticeModel {
         posterId: faker.guid.guid(),
         posterName: faker.person.name(),
         contact: faker.phoneNumber.us(),
-        affliation:faker.randomGenerator.boolean()?['All']: [sublist],
-        images: notices[i]['images']??[],
+        affliation: faker.randomGenerator.boolean() ? ['All'] : [sublist],
+        images: notices[i]['images'] ?? [],
         createdAt: DateTime.now().millisecondsSinceEpoch,
       ));
     }

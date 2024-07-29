@@ -25,7 +25,7 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
           var noticeList = ref.watch(noticeListProvider).filteredList;
           return Column(
             children: [
-              _buildHeader(),
+             // _buildHeader(),
               const SizedBox(
                 height: 20,
               ),
@@ -61,117 +61,4 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
         ));
   }
 
-  Widget _buildHeader() {
-    var style = Styles(context);
-    var affiliations = ref.watch(affiliationFutureProvider);
-    return affiliations.when(data: (data) {
-      var listOfAffiliations = data.map((e) => e.name).toList();
-      //add all to the list
-      listOfAffiliations.insert(0, 'All');
-      if (style.largerThanMobile) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              'Recent Notice',
-              style: style.title(fontSize: 30),
-            ),
-            const Spacer(),
-            const SizedBox(
-              width: 10,
-            ),
-            SizedBox(
-              width: style.isDesktop ? 500 : style.width * .3,
-              child: CustomTextFields(
-                hintText: 'Search Notice',
-                suffixIcon: const Icon(Icons.search),
-                onChanged: (query) {},
-              ),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            SizedBox(
-              width: style.isDesktop ? 300 : style.width * .3,
-              child: CustomDropDown(
-                label: 'Filter by Affiliation',
-                onChanged: (filter) {},
-                items: listOfAffiliations
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-              ),
-            )
-          ],
-        );
-      } else {
-        if (ref.watch(isUserSaerching)) {
-          return SizedBox(
-            width: double.infinity,
-            child: CustomTextFields(
-              hintText: 'Search Notice',
-              prefixIcon: Icons.search,
-              suffixIcon: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  ref.read(isUserSaerching.notifier).state = false;
-                },
-              ),
-              onChanged: (notice) {},
-            ),
-          );
-        } else if (ref.watch(isUserFiltering)) {
-          return SizedBox(
-            width: double.infinity,
-            child: CustomDropDown(
-              hintText: 'Filter by Affiliation',
-              onChanged: (filter) {},
-              suffixIcon: IconButton(
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  ref.read(isUserFiltering.notifier).state = false;
-                },
-              ),
-              items: listOfAffiliations
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
-            ),
-          );
-        }
-        return Row(
-          children: [
-            Text(
-              'Recent Notice',
-              style: style.title(fontSize: 20),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.filter_list),
-              onPressed: () {
-                ref.read(isUserFiltering.notifier).state = true;
-              },
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {
-                ref.read(isUserSaerching.notifier).state = true;
-              },
-            ),
-          ],
-        );
-      }
-    }, error: (error, stack) {
-      return const SizedBox.shrink();
-    }, loading: () {
-      return const CircularProgressIndicator();
-    });
-  }
 }

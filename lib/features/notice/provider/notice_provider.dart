@@ -18,11 +18,12 @@ final noticeListStream =
 
 final noticeListProvider =
     StateNotifierProvider<NoticeList, NoticeListModel>((ref) {
-  return NoticeList(ref:ref);
+  return NoticeList(ref: ref);
 });
 
 class NoticeList extends StateNotifier<NoticeListModel> {
-  NoticeList({required this.ref}) : super(NoticeListModel(noticeList: [], filteredList: []));
+  NoticeList({required this.ref})
+      : super(NoticeListModel(noticeList: [], filteredList: []));
   final StateNotifierProviderRef<NoticeList, NoticeListModel> ref;
 
   void setNoticeList(List<NoticeModel> list) {
@@ -37,7 +38,16 @@ class NoticeList extends StateNotifier<NoticeListModel> {
     state = state.copyWith(noticeList: list, filteredList: filteredList);
   }
 
+  void search(String query) {
+    if (query.isEmpty) {
+      state = state.copyWith(filteredList: state.noticeList);
+      return;
+    }
+    var list = state.noticeList.where((element) {
+      return element.title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    state = state.copyWith(filteredList: list);
+  }
 }
-
 
 final selectedAffiliation = StateProvider<String>((ref) => 'All');
