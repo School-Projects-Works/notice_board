@@ -64,7 +64,7 @@ class _CustomButtonState extends State<CustomButton> {
                           ? widget.color ??
                               Theme.of(context).colorScheme.secondary
                           : Colors.white,
-                      mobile: 16,
+                      fontSize: 16,
                       fontWeight: FontWeight.w500),
                 ),
               ],

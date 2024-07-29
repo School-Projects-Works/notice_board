@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Styles {
   final BuildContext context;
@@ -8,11 +9,11 @@ class Styles {
   double get height => MediaQuery.of(context).size.height;
 
   bool get isMobile => width < 768;
-  bool get isTablet => width >= 768 && width < 1024;
-  bool get isDesktop => width >= 1024;
+  bool get isTablet => width >= 768 && width < 1100;
+  bool get isDesktop => width >= 1100;
 
-  bool get smallerThanTablet => width < 1024;
-  bool get largerThanTablet => width >= 1024;
+  bool get smallerThanTablet => width < 1100;
+  bool get largerThanTablet => width >= 1100;
   bool get largerThanMobile => width >= 768;
 
   bool get isPortrait => height > width;
@@ -40,64 +41,41 @@ class Styles {
 
   TextStyle title(
           {Color? color,
-          FontWeight? fontWeight,
-          double mobile = 20,
-          double tablet = 25,
-          double desktop = 30,
+          FontWeight fontWeight = FontWeight.bold,
+          double fontSize = 25,
           String? fontFamily,
           FontStyle? style,
           double height = 1.5}) =>
-      TextStyle(
+      GoogleFonts.poppins(
           color: color ?? Colors.black,
-          fontWeight: fontWeight ?? FontWeight.bold,
-          fontFamily: fontFamily ?? 'OpenSans',
+          fontWeight: fontWeight,
           fontStyle: style ?? FontStyle.normal,
           height: height,
-          fontSize: isMobile
-              ? mobile
-              : isTablet
-                  ? tablet
-                  : desktop);
+          fontSize: fontSize);
 
   TextStyle subtitle(
           {Color? color,
           FontWeight? fontWeight,
-          double mobile = 15,
-          double tablet = 20,
-          double desktop = 25,
-          String? fontFamily,
+          double fontSize = 18,
           FontStyle? style,
           double height = 1.5}) =>
-      TextStyle(
+      GoogleFonts.roboto(
           color: color ?? Colors.black,
           fontWeight: fontWeight ?? FontWeight.normal,
-          fontFamily: fontFamily ?? 'OpenSans',
           fontStyle: style ?? FontStyle.normal,
           height: height,
-          fontSize: isMobile
-              ? mobile
-              : isTablet
-                  ? tablet
-                  : desktop);
+          fontSize: fontSize);
 
   TextStyle body(
           {Color? color,
           FontWeight? fontWeight,
-          double mobile = 12,
-          double tablet = 15,
-          double desktop = 18,
-          String? fontFamily,
+          double fontSize = 15,
           FontStyle? style,
           double height = 1.5}) =>
-      TextStyle(
+      GoogleFonts.openSans(
           color: color ?? Colors.black,
           fontWeight: fontWeight ?? FontWeight.normal,
-          fontFamily: fontFamily ?? 'OpenSans',
           fontStyle: style ?? FontStyle.normal,
           height: height,
-          fontSize: isMobile
-              ? mobile
-              : isTablet
-                  ? tablet
-                  : desktop);
+          fontSize: fontSize);
 }

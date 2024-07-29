@@ -23,4 +23,16 @@ class AssetImages {
   /// Assets for imagesSplash
   /// images/splash
   static AssetImage get imagesSplash => AssetImage(Assets.imagesSplash);
+
+  /// Assets for slidesSlide1
+  /// slides/slide1
+  static AssetImage get slidesSlide1 => AssetImage(Assets.slidesSlide1);
+
+  /// Assets for slidesSlide2
+  /// slides/slide2
+  static AssetImage get slidesSlide2 => AssetImage(Assets.slidesSlide2);
+
+  /// Assets for slidesSlide3
+  /// slides/slide3
+  static AssetImage get slidesSlide3 => AssetImage(Assets.slidesSlide3);
 }

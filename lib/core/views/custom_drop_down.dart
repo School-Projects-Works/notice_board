@@ -15,6 +15,7 @@ class CustomDropDown extends StatelessWidget {
       this.onSaved,
       this.label,
       this.prefixIcon,
+      this.suffixIcon,
       this.iconData});
 
   final dynamic value;
@@ -28,6 +29,7 @@ class CustomDropDown extends StatelessWidget {
   final Color? color;
   final IconData? iconData;
   final IconData? prefixIcon;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class CustomDropDown extends StatelessWidget {
         ),
         prefixIconColor: Theme.of(context).colorScheme.secondary,
         suffixIconColor: Theme.of(context).colorScheme.secondary,
+        suffixIcon: suffixIcon,
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,

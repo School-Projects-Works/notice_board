@@ -5,6 +5,7 @@ import 'package:notice_board/features/auth/views/registration_page.dart';
 import 'package:notice_board/features/home/views/home_page.dart';
 import 'package:notice_board/router/router_items.dart';
 
+import '../features/auth/views/forget_password_page.dart';
 import '../features/auth/views/login_page.dart';
 import '../features/main/views/container_page.dart';
 
@@ -44,6 +45,9 @@ class MyRouter {
                   }),
                   GoRoute(path: RouterItem.registerRoute.path, builder: (context, state) {
                     return const RegistrationPage();
+                  }),
+                  GoRoute(path: RouterItem.forgotPasswordRoute.path, builder: (context, state) {
+                    return const ForgetPasswordPage();
                   }),
                   
                 ])

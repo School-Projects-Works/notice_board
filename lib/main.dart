@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:notice_board/router/router.dart';
 import 'package:notice_board/utils/colors.dart';
-
 import 'core/local_storage.dart';
 
 void main() async{

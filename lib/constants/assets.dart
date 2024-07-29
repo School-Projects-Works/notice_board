@@ -20,4 +20,16 @@ class Assets {
   /// Assets for imagesSplash
   /// images/splash
   static const String imagesSplash = "assets/images/splash.png";
+
+  /// Assets for slidesSlide1
+  /// slides/slide1
+  static const String slidesSlide1 = "assets/slides/slide1.png";
+
+  /// Assets for slidesSlide2
+  /// slides/slide2
+  static const String slidesSlide2 = "assets/slides/slide2.png";
+
+  /// Assets for slidesSlide3
+  /// slides/slide3
+  static const String slidesSlide3 = "assets/slides/slide3.png";
 }

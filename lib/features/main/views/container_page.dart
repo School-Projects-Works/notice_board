@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notice_board/core/views/footer_page.dart';
+import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
+import 'package:notice_board/features/affiliations/services/affiliation_services.dart';
+import 'package:notice_board/features/notice/data/notice_model.dart';
 import 'package:notice_board/utils/styles.dart';
-
+import '../../notice/services/notice_services.dart';
 import '../components/nav_bar.dart';
 
 class ContainerPage extends ConsumerWidget {
@@ -15,12 +17,33 @@ class ContainerPage extends ConsumerWidget {
     return Scaffold(
       appBar: const PreferredSize(
           preferredSize: Size.fromHeight(100), child: NavBar()),
-      body: Container(
-        color: Colors.white54,
-        child: Center(
-          child: child,
-        ),
-      ),
+      body: FutureBuilder<bool>(
+          future: saveDummyData(),
+          builder: (context, snapshot) {
+            return Container(
+              color: Colors.white54,
+              child: Center(
+                child: child,
+              ),
+            );
+          }),
     );
+  }
+
+  Future<bool> saveDummyData() async {
+    //? save dummy affiliations
+    try {
+      // var data = AffiliationModel.dummyAffiliation();
+      // for (var item in data) {
+      //   await AffiliationServices.addAffiliation(item);
+      // }
+      // var data = NoticeModel.dummyNotice();
+      // for (var item in data) {
+      //   await NoticeServices.addNotice(item);
+      // }
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

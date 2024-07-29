@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_button.dart';
 import 'package:notice_board/core/views/custom_input.dart';
@@ -92,9 +91,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 style: style.title(
                     fontWeight: FontWeight.bold,
                     color: primaryColor,
-                    desktop: 35,
-                    mobile: 20,
-                    tablet: 25)),
+                   fontSize: style.isDesktop
+                        ? 35
+                        : style.isTablet
+                            ? 30
+                            : 20)),
             const Divider(
               height: 22,
               thickness: 3,

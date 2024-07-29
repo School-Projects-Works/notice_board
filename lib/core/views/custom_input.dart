@@ -80,7 +80,7 @@ class CustomTextFields extends ConsumerWidget {
           : TextCapitalization.none,
       style: styles.body(
           fontWeight: FontWeight.w500,
-          mobile: 14,
+          fontSize: 14,
           color: isReadOnly!
               ? Theme.of(context).textTheme.labelLarge!.color
               : Theme.of(context).textTheme.labelLarge!.color),
@@ -107,9 +107,7 @@ class CustomTextFields extends ConsumerWidget {
         filled: true,
         errorStyle: styles.body(
           color: Theme.of(context).colorScheme.error,
-          desktop: 12,
-          mobile: 12,
-          tablet: 12,
+          fontSize: 12
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(radius ?? 5),
@@ -119,7 +117,9 @@ class CustomTextFields extends ConsumerWidget {
         prefixIconColor: Theme.of(context).colorScheme.secondary,
         suffixIconColor: Theme.of(context).colorScheme.secondary,
         contentPadding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-        labelStyle: styles.body(),
+        labelStyle: styles.body(
+          fontWeight: FontWeight.w300
+        ),
         labelText: label,
         hintText: hintText,
         focusColor: Theme.of(context).colorScheme.secondary,
@@ -129,7 +129,7 @@ class CustomTextFields extends ConsumerWidget {
         ),
         iconColor: Theme.of(context).colorScheme.secondary,
         hintStyle: styles.body(
-            fontWeight: FontWeight.w300, mobile: 13, desktop: 13, tablet: 13),
+            fontWeight: FontWeight.w300, fontSize: 13),
         prefixIcon: prefixIcon != null
             ? Icon(
                 prefixIcon,

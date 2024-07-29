@@ -88,9 +88,11 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                   style: style.title(
                       fontWeight: FontWeight.bold,
                       color: primaryColor,
-                      desktop: 35,
-                      mobile: 20,
-                      tablet: 25)),
+                      fontSize: style.isDesktop
+                          ? 35
+                          : style.isTablet
+                              ? 30
+                              : 20)),
               const Divider(
                 height: 22,
                 thickness: 3,

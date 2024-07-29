@@ -15,5 +15,8 @@ class Assets {
   static const String imagesLogoT = 'assets/images/logo_t.png';
   static const String imagesProfile = 'assets/images/profile.png';
   static const String imagesSplash = 'assets/images/splash.png';
+  static const String slidesSlide1 = 'assets/slides/slide1.png';
+  static const String slidesSlide2 = 'assets/slides/slide2.png';
+  static const String slidesSlide3 = 'assets/slides/slide3.png';
 
 }

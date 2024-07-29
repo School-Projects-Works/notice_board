@@ -65,9 +65,11 @@ class CustomDialogs {
                       message,
                       style: styles.body(
                           color: Colors.white,
-                          desktop: 15,
-                          mobile: 12,
-                          tablet: 13),
+                          fontSize: styles.isDesktop
+                              ? 15
+                              : styles.isTablet
+                                  ? 13
+                                  : 12),
                     ),
                   ],
                 ),
@@ -136,9 +138,7 @@ class CustomDialogs {
                         message,
                         style: styles.body(
                             color: Colors.white,
-                            desktop: 13,
-                            mobile: 13,
-                            tablet: 13),
+                           fontSize: 13),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -165,10 +165,9 @@ class CustomDialogs {
                                     textAlign: TextAlign.center,
                                     style: styles.body(
                                         color: Colors.white,
-                                        desktop: 14,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.bold,
-                                        mobile: 14,
-                                        tablet: 14)),
+                                        )),
                               ),
                             ),
                           if (onConfirm != null &&
@@ -192,10 +191,7 @@ class CustomDialogs {
                                   textAlign: TextAlign.center,
                                   style: styles.body(
                                       color: Colors.white,
-                                      fontFamily: 'Ralway',
-                                      desktop: 13,
-                                      mobile: 13,
-                                      tablet: 13)),
+                                     fontSize: 13)),
                             ),
                           )
                         ],
