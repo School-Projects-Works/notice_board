@@ -61,6 +61,7 @@ class _NoticeCardState extends ConsumerState<NoticeCard> {
                       fitWeb: BoxFitWeb.cover,
                       height: 200),
                 ),
+              
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text('For: ${notice.affliation.join(', ')} Students',
