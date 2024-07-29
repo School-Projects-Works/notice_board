@@ -25,7 +25,7 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
           var noticeList = ref.watch(noticeListProvider).filteredList;
           return Column(
             children: [
-             // _buildHeader(),
+             _buildHeader(),
               const SizedBox(
                 height: 20,
               ),
