@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_network/image_network.dart';
+import 'package:notice_board/router/router.dart';
+import 'package:notice_board/router/router_items.dart';
 import '../../../../constants/constant_data.dart';
 import '../../../../core/functions/int_to_date.dart';
 import '../../../../utils/styles.dart';
@@ -29,7 +31,11 @@ class _NoticeCardState extends ConsumerState<NoticeCard> {
             ? style.width * .35
             : style.width * .3;
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        MyRouter(context: context, ref: ref).navigateToNamed(
+            pathPrams: {'noticeId': notice.id},
+            item: RouterItem.noticeDetailsRoute);
+      },
       onHover: (value) {
         setState(() {
           isHover = value;
@@ -50,18 +56,22 @@ class _NoticeCardState extends ConsumerState<NoticeCard> {
               if (notice.images.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: ImageNetwork(
+                  child:  ImageNetwork(
                       image: notice.images[0],
+                     onTap: () {
+                        MyRouter(context: context, ref: ref).navigateToNamed(
+                            pathPrams: {'noticeId': notice.id},
+                            item: RouterItem.noticeDetailsRoute);
+                      },
                       width: style.isMobile
                           ? style.width * .9
                           : style.isTablet
                               ? style.width * .35
                               : style.width * .3,
-                      fitAndroidIos: BoxFit.cover,
-                      fitWeb: BoxFitWeb.cover,
+                      fitAndroidIos: BoxFit.fill,
+                      fitWeb: BoxFitWeb.fill,
                       height: 200),
                 ),
-              
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Text('For: ${notice.affliation.join(', ')} Students',
@@ -87,6 +97,11 @@ class _NoticeCardState extends ConsumerState<NoticeCard> {
                 child: Markdown(
                   selectable: true,
                   shrinkWrap: true,
+                  onTapText: () {
+                    MyRouter(context: context, ref: ref).navigateToNamed(
+                        pathPrams: {'noticeId': notice.id},
+                        item: RouterItem.noticeDetailsRoute);
+                  },
                   physics: const NeverScrollableScrollPhysics(),
                   data: notice.description.length > 400
                       ? '${notice.description.substring(0, 390)}...Click to read more'

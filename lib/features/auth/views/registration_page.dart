@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_button.dart';
 import 'package:notice_board/core/views/custom_input.dart';
+import 'package:notice_board/features/auth/provider/user_provider.dart';
 import '../../../core/functions/email_validation.dart';
 import '../../../generated/assets.dart';
 import '../../../router/router.dart';
@@ -72,6 +73,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
 
   Widget _buildForm() {
     var style = Styles(context);
+    var notifier = ref.read(newuserProvider.notifier);
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         child: Form(
@@ -107,6 +109,9 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                   }
                   return null;
                 },
+                onSaved: (name){
+                  notifier.setName(name!);
+                },
               ),
               const SizedBox(height: 20),
               CustomTextFields(
@@ -117,6 +122,9 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                     return 'Please enter your email';
                   }
                   return null;
+                },
+                onSaved: (email){
+                  notifier.setEmail(email!);
                 },
               ),
               const SizedBox(
@@ -129,10 +137,13 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                 validator: (phone) {
                   if (phone == null) {
                     return 'Phone number is required';
-                  } else if (phone.length != 10 || phone.length != 12) {
-                    return 'Enter a valid phone number (233 or 0)';
+                  } else if (phone.length != 10) {
+                    return 'Enter a valid phone number of 10 digits';
                   }
                   return null;
+                },
+                onSaved: (phone){
+                  notifier.setPhone(phone!);
                 },
               ),
               const SizedBox(
@@ -147,6 +158,9 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                     return 'Please enter your password';
                   }
                   return null;
+                },
+                onSaved: (password){
+                  notifier.setPassword(password!);
                 },
                 obscureText: _isObscure,
                 suffixIcon: IconButton(
@@ -169,6 +183,7 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+                    notifier.registerUser(context: context, ref: ref);
                   }
                 },
               ),
@@ -179,7 +194,9 @@ class _RegistrationPageState extends ConsumerState<RegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('Already have an account?'),
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   TextButton(
                       onPressed: () {
                         MyRouter(context: context, ref: ref)

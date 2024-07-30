@@ -45,4 +45,11 @@ class NoticeServices {
         .map((doc) => NoticeModel.fromMap(doc.data() as Map<String, dynamic>))
         .toList());
   }
+
+  static Future<List<NoticeModel>> getAllNotice() async {
+    var data = await _noticeCollection.get();
+    return data.docs
+        .map((doc) => NoticeModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
+  }
 }

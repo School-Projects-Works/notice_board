@@ -7,6 +7,7 @@ import 'package:notice_board/router/router_items.dart';
 
 import '../features/auth/views/forget_password_page.dart';
 import '../features/auth/views/login_page.dart';
+import '../features/home/views/components/notice_details_page.dart';
 import '../features/main/views/container_page.dart';
 
 class MyRouter {
@@ -48,6 +49,13 @@ class MyRouter {
                   }),
                   GoRoute(path: RouterItem.forgotPasswordRoute.path, builder: (context, state) {
                     return const ForgetPasswordPage();
+                  }),
+
+                  GoRoute(path: RouterItem.noticeDetailsRoute.path,
+                  name: RouterItem.noticeDetailsRoute.name,
+                   builder: (context, state) {
+                    var noticeId = state.pathParameters['noticeId'];
+                    return NoticeDetailsPage(noticeId: noticeId!);
                   }),
                   
                 ])

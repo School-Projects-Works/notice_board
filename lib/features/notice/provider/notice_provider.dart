@@ -27,15 +27,7 @@ class NoticeList extends StateNotifier<NoticeListModel> {
   final StateNotifierProviderRef<NoticeList, NoticeListModel> ref;
 
   void setNoticeList(List<NoticeModel> list) {
-    var aff = ref.watch(selectedAffiliation);
-    var filteredList = list.where((element) {
-      if (aff == 'All') {
-        return true;
-      } else {
-        return element.affliation.contains(aff);
-      }
-    }).toList();
-    state = state.copyWith(noticeList: list, filteredList: filteredList);
+    state = state.copyWith(noticeList: list, filteredList: list);
   }
 
   void search(String query) {
@@ -47,6 +39,18 @@ class NoticeList extends StateNotifier<NoticeListModel> {
       return element.title.toLowerCase().contains(query.toLowerCase());
     }).toList();
     state = state.copyWith(filteredList: list);
+  }
+
+  void filter(String aff) {
+    if (aff.trim().toLowerCase() == 'all') {
+      state = state.copyWith(filteredList: state.noticeList);
+      return;
+    }
+    var filteredList = state.noticeList.where((element) {
+      return element.affliation.contains(aff);
+    }).toList();
+    state = state.copyWith(filteredList: filteredList);
+    ref.read(selectedAffiliation.notifier).state = aff;
   }
 }
 

@@ -45,4 +45,8 @@ static String getAffiliationId() {
       return [];
     }
   }
+
+  static Stream<List<AffiliationModel>> streamAffiliations() {
+    return _firestore.collection('affiliations').snapshots().map((event) => event.docs.map((e) => AffiliationModel.fromMap(e.data() as Map<String, dynamic>)).toList());
+  }
 }

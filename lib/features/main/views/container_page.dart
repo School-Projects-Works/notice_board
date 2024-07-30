@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
 import 'package:notice_board/features/affiliations/services/affiliation_services.dart';
+import 'package:notice_board/features/comments/data/comments_model.dart';
+import 'package:notice_board/features/comments/services/comment_services.dart';
 import 'package:notice_board/features/notice/data/notice_model.dart';
 import 'package:notice_board/utils/styles.dart';
 import '../../notice/services/notice_services.dart';
@@ -40,6 +42,19 @@ class ContainerPage extends ConsumerWidget {
       // var data = NoticeModel.dummyNotice();
       // for (var item in data) {
       //   await NoticeServices.addNotice(item);
+      // }
+
+      // var notice =await NoticeServices.getAllNotice();
+      // for (var item in notice) {
+      //   var comments  = CommentsModel.dummyComments(item.id);
+      //   for (var comment in comments) {
+      //     comment= comment.copyWith(noticeId: item.id,
+      //     createdAt: DateTime.now().millisecondsSinceEpoch,
+      //     id: CommentServices.getCommentId()
+      //     );
+
+      //     await CommentServices.addComment(comment);
+      //   }
       // }
       return true;
     } catch (e) {

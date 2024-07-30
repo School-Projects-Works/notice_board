@@ -13,12 +13,24 @@ class RouterItem {
       RouterItem(path: '/register', name: 'register');
   static final RouterItem forgotPasswordRoute =
       RouterItem(path: '/forgot-password', name: 'forgotPassword');
+
+
+      static final RouterItem noticeDetailsRoute =
+      RouterItem(path: '/notice/:noticeId', name: 'noticeDetailsRoute');
+
+//dashboard routes
+  static final RouterItem secretariesRoute =
+      RouterItem(path: '/admin/secretaies', name: 'secretariesRoute');
   static final RouterItem dashboardRoute =
-      RouterItem(path: '/:id/dashboard', name: 'dashboard');
+      RouterItem(path: '/dashboard', name: 'dashboard');
   static final RouterItem departmentsRoute =
       RouterItem(path: '/admin/departments', name: 'departmentsRoute');
   static final RouterItem noticeRoute =
-      RouterItem(path: '/:id/notice', name: 'notice');
+      RouterItem(path: '/notice', name: 'notice');
+  static final RouterItem requestRoute =
+      RouterItem(path: '/request', name: 'request');
+static final RouterItem profileRoute =
+      RouterItem(path: '/profile', name: 'profile');
 static List<RouterItem> allRoutes = [
     homeRoute,
     loginRoute,

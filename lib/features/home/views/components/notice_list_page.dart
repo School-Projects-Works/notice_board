@@ -28,10 +28,7 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
 
           return Column(
             children: [
-
-
-               _buildHeader(),
-
+              _buildHeader(),
               const SizedBox(
                 height: 20,
               ),
@@ -46,6 +43,7 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
                 Wrap(
                   spacing: 10,
                   runAlignment: WrapAlignment.start,
+                  alignment: WrapAlignment.start,
                   runSpacing: 10,
                   children: [
                     for (int i = 0;
@@ -56,7 +54,6 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
                       ),
                   ],
                 ),
-             
             ],
           );
         }, error: (error, stack) {
@@ -69,7 +66,8 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
           );
         }));
   }
-   Widget _buildHeader() {
+
+  Widget _buildHeader() {
     var style = Styles(context);
     var affiliations = ref.watch(affiliationFutureProvider);
     return affiliations.when(data: (data) {
@@ -93,7 +91,9 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
               child: CustomTextFields(
                 hintText: 'Search Notice',
                 suffixIcon: const Icon(Icons.search),
-                onChanged: (query) {},
+                onChanged: (query) {
+                  ref.read(noticeListProvider.notifier).search(query);
+                },
               ),
             ),
             const SizedBox(
@@ -103,7 +103,10 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
               width: style.isDesktop ? 300 : style.width * .3,
               child: CustomDropDown(
                 label: 'Filter by Affiliation',
-                onChanged: (filter) {},
+                onChanged: (filter) {
+                  
+                  ref.read(noticeListProvider.notifier).filter(filter);
+                },
                 items: listOfAffiliations
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
@@ -127,7 +130,9 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
                   ref.read(isUserSaerching.notifier).state = false;
                 },
               ),
-              onChanged: (notice) {},
+              onChanged: (notice) {
+                ref.read(noticeListProvider.notifier).search(notice);
+              },
             ),
           );
         } else if (ref.watch(isUserFiltering)) {
@@ -135,7 +140,10 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
             width: double.infinity,
             child: CustomDropDown(
               hintText: 'Filter by Affiliation',
-              onChanged: (filter) {},
+              onChanged: (filter) {
+               // ref.read(selectedAffiliation.notifier).state = filter;
+                ref.read(noticeListProvider.notifier).filter(filter);
+              },
               suffixIcon: IconButton(
                 icon: const Icon(
                   Icons.close,
@@ -182,5 +190,4 @@ class _NoticeListPageState extends ConsumerState<NoticeListPage> {
       return const CircularProgressIndicator();
     });
   }
-
 }

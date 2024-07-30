@@ -59,10 +59,14 @@ class UserModel {
     result.addAll({'affiliations': affiliations});
     if (image != null) {
       result.addAll({'image': image});
+    }else{
+      result.addAll({'image': null});
     }
     result.addAll({'phone': phone});
     if (createdAt != null) {
       result.addAll({'createdAt': createdAt});
+    }else{
+      result.addAll({'createdAt': DateTime.now().millisecondsSinceEpoch});
     }
 
     return result;

@@ -9,6 +9,7 @@ import 'package:notice_board/utils/styles.dart';
 
 import '../../../core/functions/email_validation.dart';
 import '../../../router/router_items.dart';
+import '../provider/user_provider.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -74,6 +75,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   Widget _buildForm() {
     var style = Styles(context);
+    var notifier = ref.read(loginProvider.notifier);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Form(
@@ -91,7 +93,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 style: style.title(
                     fontWeight: FontWeight.bold,
                     color: primaryColor,
-                   fontSize: style.isDesktop
+                    fontSize: style.isDesktop
                         ? 35
                         : style.isTablet
                             ? 30
@@ -111,6 +113,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 }
                 return null;
               },
+              onSaved: (email) {
+                notifier.setEmail(email!);
+              },
             ),
             const SizedBox(height: 22),
             CustomTextFields(
@@ -122,6 +127,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   return 'Please enter your password';
                 }
                 return null;
+              },
+              onSaved: (password) {
+                notifier.setPassword(password!);
               },
               obscureText: _isObscure,
               suffixIcon: IconButton(
@@ -156,6 +164,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+                    notifier.loginUser(context: context, ref: ref);
                   }
                 }),
             const SizedBox(height: 22),
