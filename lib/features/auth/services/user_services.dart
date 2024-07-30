@@ -63,4 +63,13 @@ class UserServices {
       return false;
     }
   }
+
+  static Future<UserModel?>getUserData(String s)async {
+    try {
+      var user = await _userCollection.doc(s).get();
+      return UserModel.fromMap(user.data() as Map<String, dynamic>);
+    } catch (e) {
+      return null;
+    }
+  }
 }

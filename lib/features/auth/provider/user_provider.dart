@@ -6,10 +6,17 @@ import 'package:notice_board/features/auth/data/user_model.dart';
 import 'package:notice_board/router/router.dart';
 import 'package:notice_board/router/router_items.dart';
 
+import '../../../core/local_storage.dart';
 import '../services/user_services.dart';
 
 final userProvider =
-    StateNotifierProvider<UserProvider, UserModel>((ref) => UserProvider());
+    StateNotifierProvider<UserProvider, UserModel>((ref) {
+      var user = LocalStorage.getData('user');
+  if (user != null) {
+    return UserProvider()..updateUer(UserModel.fromJson(user).id);
+  }
+  return UserProvider();
+      });
 
 class UserProvider extends StateNotifier<UserModel> {
   UserProvider()
@@ -22,10 +29,27 @@ class UserProvider extends StateNotifier<UserModel> {
         ));
 
   void setUser(UserModel user) {
+    LocalStorage.saveData('user', user.toJson());
     state = user;
   }
 
   void logout({required BuildContext context}) async {}
+  
+  updateUer(String? id) async {
+    var userData = await UserServices.getUserData(id!);
+    if (userData != null) {
+      if (userData.status.toLowerCase() == 'banned') {
+        LocalStorage.removeData('user');
+        CustomDialogs.toast(
+            message:
+                'You are band from accessing this platform. Contact admin for more information',
+            type: DialogType.error);
+        return;
+      }
+
+      state = userData;
+    }
+  }
 }
 
 final newuserProvider = StateNotifierProvider<NewUser, UserModel>((ref) {
@@ -105,6 +129,15 @@ class LoginProvider extends StateNotifier<LoginModel> {
         CustomDialogs.dismiss();
         CustomDialogs.toast(
             message: 'Uanable to get User Data', type: DialogType.error);
+        return;
+      }
+      if (userModel.status.toLowerCase() == 'banned') {
+        LocalStorage.removeData('user');
+        CustomDialogs.dismiss();
+        CustomDialogs.toast(
+            message:
+                'You are band from accessing this platform. Contact admin for more information',
+            type: DialogType.error);
         return;
       }
       CustomDialogs.dismiss();

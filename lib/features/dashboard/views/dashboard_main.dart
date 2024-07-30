@@ -216,6 +216,18 @@ class DashBoardMainPage extends ConsumerWidget {
             child: BarItem(
                 padding: const EdgeInsets.only(
                     right: 40, top: 10, bottom: 10, left: 10),
+                icon: Icons.people,
+                title: 'Students',
+                onTap: () {
+                  MyRouter(context: context, ref: ref)
+                      .navigateToRoute(RouterItem.studentsRoute);
+                  Navigator.of(context).pop();
+                }),
+          ),
+          PopupMenuItem(
+            child: BarItem(
+                padding: const EdgeInsets.only(
+                    right: 40, top: 10, bottom: 10, left: 10),
                 icon: Icons.notifications,
                 title: 'Notice',
                 onTap: () {

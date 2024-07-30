@@ -9,6 +9,7 @@ import 'package:notice_board/router/router_items.dart';
 
 import '../features/auth/views/forget_password_page.dart';
 import '../features/auth/views/login_page.dart';
+import '../features/dashboard/pages/affiliations/views/affiliations_page.dart';
 import '../features/dashboard/pages/home/views/dashboard_home.dart';
 import '../features/dashboard/pages/secretaries/views/secretaries_page.dart';
 import '../features/dashboard/pages/students/views/students_pages.dart';
@@ -71,35 +72,51 @@ class MyRouter {
                         var noticeId = state.pathParameters['noticeId'];
                         return NoticeDetailsPage(noticeId: noticeId!);
                       }),
+                 ]),
                   ShellRoute(
-                      builder: (context, state, child) {
-                        return DashBoardMainPage(
-                          child,
-                        );
-                      },
-                      routes: [
-                        GoRoute(
-                            path: RouterItem.dashboardRoute.path,
-                            builder: (context, state) {
-                              return const DashboardHomePage();
-                            }),
-                            GoRoute(path: RouterItem.profileRoute.path, builder: (context, state) {
-                          return Container();
-                        }),
-                        GoRoute(path: RouterItem.secretariesRoute.path, builder: (context, state) {
-                          return const SecretariesPage();
-                        }),
-                        GoRoute(path: RouterItem.noticeRoute.path, builder: (context, state) {
-                          return const NoticesPage();
-                        }),
-                        GoRoute(path: RouterItem.registerRoute.path, builder: (context, state) {
-                          return const RequestPage();
-                        }),
-                        GoRoute(path: RouterItem.studentsRoute.path, builder: (context, state) {
-                          return const StudentsPages();
-                        }),
-                      ])
+                builder: (context, state, child) {
+                  return DashBoardMainPage(
+                    child,
+                  );
+                },
+                routes: [
+                  GoRoute(
+                      path: RouterItem.dashboardRoute.path,
+                      builder: (context, state) {
+                        return const DashboardHomePage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.profileRoute.path,
+                      builder: (context, state) {
+                        return Container();
+                      }),
+                  GoRoute(
+                      path: RouterItem.secretariesRoute.path,
+                      builder: (context, state) {
+                        return const SecretariesPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.noticeRoute.path,
+                      builder: (context, state) {
+                        return const NoticesPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.requestRoute.path,
+                      builder: (context, state) {
+                        return const RequestPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.studentsRoute.path,
+                      builder: (context, state) {
+                        return const StudentsPages();
+                      }),
+                  GoRoute(
+                      path: RouterItem.departmentsRoute.path,
+                      builder: (context, state) {
+                        return const AffiliationsPage();
+                      }),
                 ])
+                
           ]);
 
   void navigateToRoute(RouterItem item) {

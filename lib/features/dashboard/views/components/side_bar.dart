@@ -7,7 +7,6 @@ import '../../../../utils/styles.dart';
 import '../../../auth/provider/user_provider.dart';
 import 'side_bar_item.dart';
 
-
 class SideBar extends ConsumerWidget {
   const SideBar({super.key});
 
@@ -27,15 +26,16 @@ class SideBar extends ConsumerWidget {
                 text: TextSpan(
                     text: 'Hello, \n',
                     style: styles.body(
-                        color: Colors.white38,),
+                      color: Colors.white38,
+                    ),
                     children: [
                   TextSpan(
                       text: ref.watch(userProvider).name,
                       style: styles.subtitle(
-                          fontWeight: FontWeight.bold,
-                         fontSize: styles.isDesktop ? 20 : 16,
-                          color: Colors.white,
-                          ))
+                        fontWeight: FontWeight.bold,
+                        fontSize: styles.isDesktop ? 20 : 16,
+                        color: Colors.white,
+                      ))
                 ])),
           ),
           const SizedBox(
@@ -47,11 +47,10 @@ class SideBar extends ConsumerWidget {
                 : user.role == 'secretary'
                     ? buildManagerManu(ref, context)
                     : buildUserManu(ref, context),
-            ),
+          ),
           // footer
           Text('© 2024 All rights reserved',
-              style: styles.body(
-                  color: Colors.white38, fontSize: 12)),
+              style: styles.body(color: Colors.white38, fontSize: 12)),
         ]));
   }
 
@@ -112,6 +111,20 @@ class SideBar extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: SideBarItem(
+            title: 'Students',
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            icon: Icons.people,
+            isActive:
+                ref.watch(routerProvider) == RouterItem.studentsRoute.name,
+            onTap: () {
+              MyRouter(context: context, ref: ref)
+                  .navigateToRoute(RouterItem.studentsRoute);
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: SideBarItem(
             title: 'Requests',
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             icon: Icons.request_page,
@@ -122,7 +135,6 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
-          
       ],
     );
   }
@@ -136,8 +148,7 @@ class SideBar extends ConsumerWidget {
             title: 'My Notice',
             padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             icon: Icons.notifications,
-            isActive:
-                ref.watch(routerProvider) == RouterItem.noticeRoute.name,
+            isActive: ref.watch(routerProvider) == RouterItem.noticeRoute.name,
             onTap: () {
               MyRouter(context: context, ref: ref)
                   .navigateToRoute(RouterItem.noticeRoute);
@@ -158,7 +169,6 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
-       
       ],
     );
   }
@@ -166,7 +176,7 @@ class SideBar extends ConsumerWidget {
   Widget buildManagerManu(WidgetRef ref, BuildContext context) {
     return Column(
       children: [
-         SideBarItem(
+        SideBarItem(
           title: 'Dashboard',
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
           icon: Icons.dashboard,
@@ -176,7 +186,7 @@ class SideBar extends ConsumerWidget {
                 .navigateToRoute(RouterItem.dashboardRoute);
           },
         ),
-         Padding(
+        Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: SideBarItem(
             title: 'Notice',
@@ -186,6 +196,20 @@ class SideBar extends ConsumerWidget {
             onTap: () {
               MyRouter(context: context, ref: ref)
                   .navigateToRoute(RouterItem.noticeRoute);
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: SideBarItem(
+            title: 'Students',
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            icon: Icons.people,
+            isActive:
+                ref.watch(routerProvider) == RouterItem.studentsRoute.name,
+            onTap: () {
+              MyRouter(context: context, ref: ref)
+                  .navigateToRoute(RouterItem.studentsRoute);
             },
           ),
         ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 
 class UserModel {
@@ -10,6 +9,7 @@ class UserModel {
   String? password;
   List<String> affiliations;
   String? image;
+  String status;
   String phone;
   int? createdAt;
   UserModel({
@@ -21,6 +21,7 @@ class UserModel {
     this.affiliations = const [],
     this.image,
     required this.phone,
+    this.status='active',
     this.createdAt,
   });
 
@@ -33,6 +34,7 @@ class UserModel {
     List<String>? affiliations,
     String? image,
     String? phone,
+    String? status,
     int? createdAt,
   }) {
     return UserModel(
@@ -44,6 +46,7 @@ class UserModel {
       affiliations: affiliations ?? this.affiliations,
       image: image ?? this.image,
       phone: phone ?? this.phone,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -59,15 +62,16 @@ class UserModel {
     result.addAll({'affiliations': affiliations});
     if (image != null) {
       result.addAll({'image': image});
-    }else{
+    } else {
       result.addAll({'image': null});
     }
     result.addAll({'phone': phone});
     if (createdAt != null) {
       result.addAll({'createdAt': createdAt});
-    }else{
+    } else {
       result.addAll({'createdAt': DateTime.now().millisecondsSinceEpoch});
     }
+    result.addAll({'status': status});
 
     return result;
   }
@@ -81,6 +85,7 @@ class UserModel {
       affiliations: List<String>.from(map['affiliations']),
       image: map['image'],
       phone: map['phone'] ?? '',
+      status: map['status'] ?? 'active',
       createdAt: map['createdAt']?.toInt(),
     );
   }
@@ -107,6 +112,7 @@ class UserModel {
         other.password == password &&
         listEquals(other.affiliations, affiliations) &&
         other.image == image &&
+        other.status == status &&
         other.phone == phone &&
         other.createdAt == createdAt;
   }
@@ -121,6 +127,7 @@ class UserModel {
         affiliations.hashCode ^
         image.hashCode ^
         phone.hashCode ^
+        status.hashCode ^
         createdAt.hashCode;
   }
 }
