@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notice_board/features/dashboard/pages/secretaries/provider/secretaries_provider.dart';
+import 'package:notice_board/features/dashboard/pages/students/provider/students_provider.dart';
+import 'package:notice_board/features/notice/provider/notice_provider.dart';
 import 'package:notice_board/generated/assets.dart';
-
 import '../../../core/views/custom_dialog.dart';
 import '../../../router/router.dart';
 import '../../../router/router_items.dart';
@@ -19,10 +21,10 @@ class DashBoardMainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var styles = Styles(context);
     var user = ref.watch(userProvider);
-    var userStream = ref.watch(adminStudentsStreamProvider);
-    var noticeStream = ref.watch(adminManagersStream);
+    var userStream = ref.watch(secretariesStream);
+    var noticeStream = ref.watch(noticeListStream);
     var affiliationStream = ref.watch(dashAffiStreamProvider);
- 
+    var studentsStream = ref.watch(studentsStreamProvider);
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -119,75 +121,45 @@ class DashBoardMainPage extends ConsumerWidget {
                               color: Colors.grey[100],
                               padding: const EdgeInsets.all(10),
                               child: affiliationStream.when(
-                                  loading: () => const Center(
-                                      child: CircularProgressIndicator()),
-                                  error: (error, stack) {
-                                    return Center(
-                                        child: Text(error.toString()));
-                                  },
-                                  data: (data) {
-                                    return hostelsStream.when(
-                                        data: (hostels) {
-                                          return bookingsStream.when(
-                                              data: (bookings) {
-                                                return roomsStream.when(
-                                                    data: (rooms) {
-                                                      return studentsStream
-                                                          .when(
-                                                              data: (students) {
-                                                                return managersStream
-                                                                    .when(
-                                                                        data:
-                                                                            (managers) {
-                                                                          return child;
-                                                                        },
-                                                                        error: (error,
-                                                                            stack) {
-                                                                          return Center(
-                                                                              child: Text(error.toString()));
-                                                                        },
-                                                                        loading:
-                                                                            () =>
-                                                                                const Center(child: CircularProgressIndicator()));
-                                                              },
-                                                              error: (error,
-                                                                  stack) {
-                                                                return Center(
-                                                                    child: Text(
-                                                                        error
-                                                                            .toString()));
-                                                              },
-                                                              loading: () =>
-                                                                  const Center(
-                                                                      child:
-                                                                          CircularProgressIndicator()));
-                                                    },
-                                                    error: (error, stack) {
-                                                      return Center(
-                                                          child: Text(error
-                                                              .toString()));
-                                                    },
-                                                    loading: () => const Center(
-                                                        child:
-                                                            CircularProgressIndicator()));
-                                              },
-                                              error: (error, stack) {
-                                                return Center(
-                                                    child:
-                                                        Text(error.toString()));
-                                              },
-                                              loading: () => const Center(
+                                loading: () => const Center(
+                                    child: CircularProgressIndicator()),
+                                error: (error, stack) {
+                                  return Center(child: Text(error.toString()));
+                                },
+                                data: (data) {
+                                  return userStream.when(
+                                      data: (user) {
+                                        return noticeStream.when(
+                                            data: (notice) {
+                                              return studentsStream.when(
+                                                data: (students) {
+                                                  return child;
+                                                },
+                                                error: (error, stack) {
+                                                  return Center(
+                                                      child: Text(error.toString()));
+                                                },
+                                                loading: () => const Center(
+                                                    child: CircularProgressIndicator()),
+                                              );
+                                            },
+                                            error: (error, stack) {
+                                              return Center(
                                                   child:
-                                                      CircularProgressIndicator()));
-                                        },
-                                        error: (error, stack) {
-                                          return Center(
-                                              child: Text(error.toString()));
-                                        },
-                                        loading: () => const Center(
-                                            child:
-                                                CircularProgressIndicator()));
-                                  }))),
+                                                      Text(error.toString()));
+                                            },
+                                            loading: () => const Center(
+                                                child:
+                                                    CircularProgressIndicator()));
+                                      },
+                                      error: (error, stack) {
+                                        return Center(
+                                            child: Text(error.toString()));
+                                      },
+                                      loading: () => const Center(
+                                          child: CircularProgressIndicator()));
+                                },
+                              )))
                     ],
                   ),
           )),
@@ -366,7 +338,7 @@ class DashBoardMainPage extends ConsumerWidget {
                     Navigator.of(context).pop();
                   }),
             ),
-             ];
+          ];
         });
   }
 }

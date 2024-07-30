@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:notice_board/features/auth/views/registration_page.dart';
+import 'package:notice_board/features/dashboard/pages/notices/views/notices_page.dart';
+import 'package:notice_board/features/dashboard/pages/request/views/request_page.dart';
 import 'package:notice_board/features/home/views/home_page.dart';
 import 'package:notice_board/router/router_items.dart';
 
 import '../features/auth/views/forget_password_page.dart';
 import '../features/auth/views/login_page.dart';
+import '../features/dashboard/pages/home/views/dashboard_home.dart';
+import '../features/dashboard/pages/secretaries/views/secretaries_page.dart';
+import '../features/dashboard/pages/students/views/students_pages.dart';
+import '../features/dashboard/views/dashboard_main.dart';
 import '../features/home/views/components/notice_details_page.dart';
 import '../features/main/views/container_page.dart';
 
@@ -38,26 +44,61 @@ class MyRouter {
                   );
                 },
                 routes: [
-                  GoRoute(path: RouterItem.homeRoute.path, builder: (context, state) {
-                    return const HomePage();
-                  }),
-                  GoRoute(path: RouterItem.loginRoute.path, builder: (context, state) {
-                    return const LoginPage();
-                  }),
-                  GoRoute(path: RouterItem.registerRoute.path, builder: (context, state) {
-                    return const RegistrationPage();
-                  }),
-                  GoRoute(path: RouterItem.forgotPasswordRoute.path, builder: (context, state) {
-                    return const ForgetPasswordPage();
-                  }),
-
-                  GoRoute(path: RouterItem.noticeDetailsRoute.path,
-                  name: RouterItem.noticeDetailsRoute.name,
-                   builder: (context, state) {
-                    var noticeId = state.pathParameters['noticeId'];
-                    return NoticeDetailsPage(noticeId: noticeId!);
-                  }),
-                  
+                  GoRoute(
+                      path: RouterItem.homeRoute.path,
+                      builder: (context, state) {
+                        return const HomePage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.loginRoute.path,
+                      builder: (context, state) {
+                        return const LoginPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.registerRoute.path,
+                      builder: (context, state) {
+                        return const RegistrationPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.forgotPasswordRoute.path,
+                      builder: (context, state) {
+                        return const ForgetPasswordPage();
+                      }),
+                  GoRoute(
+                      path: RouterItem.noticeDetailsRoute.path,
+                      name: RouterItem.noticeDetailsRoute.name,
+                      builder: (context, state) {
+                        var noticeId = state.pathParameters['noticeId'];
+                        return NoticeDetailsPage(noticeId: noticeId!);
+                      }),
+                  ShellRoute(
+                      builder: (context, state, child) {
+                        return DashBoardMainPage(
+                          child,
+                        );
+                      },
+                      routes: [
+                        GoRoute(
+                            path: RouterItem.dashboardRoute.path,
+                            builder: (context, state) {
+                              return const DashboardHomePage();
+                            }),
+                            GoRoute(path: RouterItem.profileRoute.path, builder: (context, state) {
+                          return Container();
+                        }),
+                        GoRoute(path: RouterItem.secretariesRoute.path, builder: (context, state) {
+                          return const SecretariesPage();
+                        }),
+                        GoRoute(path: RouterItem.noticeRoute.path, builder: (context, state) {
+                          return const NoticesPage();
+                        }),
+                        GoRoute(path: RouterItem.registerRoute.path, builder: (context, state) {
+                          return const RequestPage();
+                        }),
+                        GoRoute(path: RouterItem.studentsRoute.path, builder: (context, state) {
+                          return const StudentsPages();
+                        }),
+                      ])
                 ])
           ]);
 

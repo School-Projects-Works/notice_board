@@ -17,6 +17,7 @@ class NoticeModel {
   String? email;
   List<String> affliation;
   List<String> images;
+  String status;
   int createdAt;
   NoticeModel({
     required this.id,
@@ -28,6 +29,7 @@ class NoticeModel {
     this.email,
     this.affliation = const [],
     this.images = const [],
+     this.status='unpublished',
     required this.createdAt,
   });
 
@@ -41,6 +43,7 @@ class NoticeModel {
     String? email,
     List<String>? affliation,
     List<String>? images,
+    String? status,
     int? createdAt,
   }) {
     return NoticeModel(
@@ -53,6 +56,7 @@ class NoticeModel {
       email: email ?? this.email,
       affliation: affliation ?? this.affliation,
       images: images ?? this.images,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -71,6 +75,7 @@ class NoticeModel {
     }
     result.addAll({'affliation': affliation});
     result.addAll({'images': images});
+    result.addAll({'status': status});
     result.addAll({'createdAt': createdAt});
   
     return result;
@@ -87,6 +92,7 @@ class NoticeModel {
       email: map['email'],
       affliation: List<String>.from(map['affliation']),
       images: List<String>.from(map['images']),
+      status: map['status'] ?? '',
       createdAt: map['createdAt']?.toInt() ?? 0,
     );
   }
@@ -98,7 +104,7 @@ class NoticeModel {
 
   @override
   String toString() {
-    return 'NoticeModel(id: $id, title: $title, description: $description, posterId: $posterId, posterName: $posterName, contact: $contact, email: $email, affliation: $affliation, images: $images, createdAt: $createdAt)';
+    return 'NoticeModel(id: $id, title: $title, description: $description, posterId: $posterId, posterName: $posterName, contact: $contact, email: $email, affliation: $affliation, images: $images, status: $status, createdAt: $createdAt)';
   }
 
   @override
@@ -115,6 +121,7 @@ class NoticeModel {
       other.email == email &&
       listEquals(other.affliation, affliation) &&
       listEquals(other.images, images) &&
+      other.status == status &&
       other.createdAt == createdAt;
   }
 
@@ -129,6 +136,7 @@ class NoticeModel {
       email.hashCode ^
       affliation.hashCode ^
       images.hashCode ^
+      status.hashCode ^
       createdAt.hashCode;
   }
 

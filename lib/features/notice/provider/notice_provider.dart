@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../notice/data/notice_model.dart';
 import '../../notice/services/notice_services.dart';
 import '../data/notice_list_model.dart';
@@ -23,11 +22,12 @@ final noticeListProvider =
 
 class NoticeList extends StateNotifier<NoticeListModel> {
   NoticeList({required this.ref})
-      : super(NoticeListModel(noticeList: [], filteredList: []));
+      : super(NoticeListModel(noticeList: [], filteredList: [], noticeRawList: [], filteredRawList: []));
   final StateNotifierProviderRef<NoticeList, NoticeListModel> ref;
 
   void setNoticeList(List<NoticeModel> list) {
-    state = state.copyWith(noticeList: list, filteredList: list);
+    var publishedList = list.where((element) => element.status == 'published').toList();
+    state = state.copyWith(noticeList: publishedList, filteredList: publishedList, noticeRawList: list, filteredRawList: list);
   }
 
   void search(String query) {

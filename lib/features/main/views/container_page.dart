@@ -56,6 +56,13 @@ class ContainerPage extends ConsumerWidget {
       //     await CommentServices.addComment(comment);
       //   }
       // }
+
+      //update notice status
+      // var notice =await NoticeServices.getAllNotice();
+      // for (var item in notice) {
+      //   item= item.copyWith(status: 'published');
+      //   await NoticeServices.updateNotice(item);
+      // }
       return true;
     } catch (e) {
       return false;

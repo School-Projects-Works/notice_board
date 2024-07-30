@@ -20,7 +20,7 @@ class RouterItem {
 
 //dashboard routes
   static final RouterItem secretariesRoute =
-      RouterItem(path: '/admin/secretaies', name: 'secretariesRoute');
+      RouterItem(path: '/secretaies', name: 'secretariesRoute');
   static final RouterItem dashboardRoute =
       RouterItem(path: '/dashboard', name: 'dashboard');
   static final RouterItem departmentsRoute =
@@ -31,6 +31,8 @@ class RouterItem {
       RouterItem(path: '/request', name: 'request');
 static final RouterItem profileRoute =
       RouterItem(path: '/profile', name: 'profile');
+static final RouterItem studentsRoute =
+      RouterItem(path: '/students', name: 'students');
 static List<RouterItem> allRoutes = [
     homeRoute,
     loginRoute,
