@@ -52,6 +52,19 @@ class NoticeList extends StateNotifier<NoticeListModel> {
     state = state.copyWith(filteredList: filteredList);
     ref.read(selectedAffiliation.notifier).state = aff;
   }
+
+  void searchInRaw(String query) {
+    if (query.isEmpty) {
+      state = state.copyWith(filteredRawList: state.noticeRawList);
+      return;
+    }
+    var list = state.noticeRawList.where((element) {
+      return element.title.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+    state = state.copyWith(filteredRawList: list);
+  }
+
+  void unpublish(NoticeModel notice, WidgetRef ref) {}
 }
 
 final selectedAffiliation = StateProvider<String>((ref) => 'All');

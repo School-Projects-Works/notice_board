@@ -72,4 +72,13 @@ class UserServices {
       return null;
     }
   }
+
+  static Future<bool>updateUser({required String id, required Map<String, String> data})async {
+    try {
+      await _userCollection.doc(id).update(data);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

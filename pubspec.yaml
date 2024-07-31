@@ -31,6 +31,8 @@ dependencies:
   intl: ^0.19.0
   image_network: ^2.5.6
   modal_bottom_sheet: ^3.0.0
+  data_table_2: ^2.5.15
+  markdown_toolbar: ^0.5.0
 
 dev_dependencies:
   flutter_test:
