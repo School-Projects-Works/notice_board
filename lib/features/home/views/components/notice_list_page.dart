@@ -17,7 +17,7 @@ class NoticeListPage extends ConsumerStatefulWidget {
 class _NoticeListPageState extends ConsumerState<NoticeListPage> {
   @override
   Widget build(BuildContext context) {
-    var style = Styles(context);
+   
     var noticeStream = ref.watch(noticeListStream);
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),

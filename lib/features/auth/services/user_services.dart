@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notice_board/features/auth/data/login_model.dart';
 import 'package:notice_board/features/auth/data/user_model.dart';
 
@@ -58,6 +59,9 @@ class UserServices {
       await user!.sendEmailVerification();
       return true;
     } on FirebaseAuthException catch (e) {
+      if (kDebugMode) {
+        print(e.message);
+      }
       return false;
     } catch (e) {
       return false;

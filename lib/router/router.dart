@@ -11,6 +11,7 @@ import '../features/auth/views/forget_password_page.dart';
 import '../features/auth/views/login_page.dart';
 import '../features/dashboard/pages/affiliations/views/affiliations_page.dart';
 import '../features/dashboard/pages/home/views/dashboard_home.dart';
+import '../features/dashboard/pages/notices/views/view_notice.dart';
 import '../features/dashboard/pages/secretaries/views/secretaries_page.dart';
 import '../features/dashboard/pages/students/views/students_pages.dart';
 import '../features/dashboard/views/dashboard_main.dart';
@@ -114,6 +115,13 @@ class MyRouter {
                       path: RouterItem.departmentsRoute.path,
                       builder: (context, state) {
                         return const AffiliationsPage();
+                      }),
+                      GoRoute(
+                      path: RouterItem.dashNoticeDetailsRoute.path,
+                      name: RouterItem.dashNoticeDetailsRoute.name,
+                      builder: (context, state) {
+                        var noticeId = state.pathParameters['noticeId'];
+                        return ViewNotice(noticeId: noticeId!);
                       }),
                 ])
                 

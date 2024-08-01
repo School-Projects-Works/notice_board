@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
 import 'package:notice_board/features/dashboard/pages/secretaries/provider/secretaries_provider.dart';
-
-import '../../../../../core/views/custom_button.dart';
 import '../../../../../core/views/custom_input.dart';
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/styles.dart';

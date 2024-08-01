@@ -17,6 +17,8 @@ class RouterItem {
 
       static final RouterItem noticeDetailsRoute =
       RouterItem(path: '/notice/:noticeId', name: 'noticeDetailsRoute');
+      static final RouterItem dashNoticeDetailsRoute =
+      RouterItem(path: '/dash-notice/:noticeId', name: 'dashNoticeDetails');
 
 //dashboard routes
   static final RouterItem secretariesRoute =

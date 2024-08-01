@@ -1,7 +1,6 @@
-import 'package:flutter_riverpod/src/consumer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
 import 'package:notice_board/features/auth/data/user_model.dart';
-import 'package:riverpod/riverpod.dart';
 
 import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
 import 'package:notice_board/features/affiliations/services/affiliation_services.dart';

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notice_board/features/notice/data/notice_model.dart';
 
 class NoticeServices {
@@ -51,5 +52,20 @@ class NoticeServices {
     return data.docs
         .map((doc) => NoticeModel.fromMap(doc.data() as Map<String, dynamic>))
         .toList();
+  }
+
+  static Future<List<String>> uploadNoticeImages(String id, List<Uint8List> data) async {
+    try {
+      var urls = <String>[];
+      for (var i = 0; i < data.length; i++) {
+        var ref = _storageRef.child('$id/$i.jpeg');
+        await ref.putData(data[i], SettableMetadata(contentType: 'image/jpeg'));
+        var url = await ref.getDownloadURL();
+        urls.add(url);
+      }
+      return urls;
+    } catch (e) {
+      return [];
+    }
   }
 }

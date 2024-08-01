@@ -1,11 +1,14 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:notice_board/core/views/custom_drop_down.dart';
 import 'package:notice_board/features/dashboard/pages/affiliations/provider/dash_affi_provider.dart';
 import 'package:notice_board/features/notice/provider/notice_provider.dart';
-
+import 'package:notice_board/router/router.dart';
+import 'package:notice_board/router/router_items.dart';
 import '../../../../../core/views/custom_button.dart';
 import '../../../../../core/views/custom_dialog.dart';
 import '../../../../../core/views/custom_input.dart';
@@ -42,6 +45,8 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
       notices =
           notices.where((element) => element.posterId == user.id).toList();
     }
+    //order post by created at
+    notices.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return Container(
       padding: const EdgeInsets.all(16),
       color: Colors.white,
@@ -174,7 +179,13 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
                         children: [
                           IconButton(
                             icon: const Icon(Icons.remove_red_eye),
-                            onPressed: () {},
+                            onPressed: () {
+                              MyRouter(context: context, ref: ref)
+                                  .navigateToNamed(
+                                    item: RouterItem.dashNoticeDetailsRoute,
+                                    pathPrams: {'noticeId': notice.id},
+                                  );
+                            },
                           ),
                           IconButton(
                             icon: const Icon(Icons.edit),
@@ -260,6 +271,48 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
                       const SizedBox(
                         height: 10,
                       ),
+                      if (ref.watch(noticeImageProvider).isNotEmpty)
+                        Wrap(
+                          children: ref
+                              .watch(noticeImageProvider)
+                              .map((e) => Container(
+                                    width: 100,
+                                    height: 100,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 3),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(color: Colors.black),
+                                        image: DecorationImage(
+                                            image: MemoryImage(e),
+                                            fit: BoxFit.cover)),
+                                    //delete button
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          ref
+                                              .read(
+                                                  noticeImageProvider.notifier)
+                                              .removeImage(e);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(.5),
+                                              shape: BoxShape.circle),
+                                          child: const Icon(
+                                            Icons.cancel,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
                     ],
                   ),
                 ),
@@ -396,7 +449,17 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
     );
   }
 
-  void _pickImages() async {}
+  void _pickImages() async {
+    var image = await ImagePicker().pickMultiImage(limit: 3);
+    if (image.isNotEmpty) {
+      List<Uint8List> images = [];
+      for (var i = 0; i < image.length; i++) {
+        var bytes = await image[i].readAsBytes();
+        images.add(bytes);
+      }
+      ref.read(noticeImageProvider.notifier).addImage(images);
+    }
+  }
 }
 
 final isNewNotice = StateProvider<bool>((ref) => false);
