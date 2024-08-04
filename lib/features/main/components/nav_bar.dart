@@ -88,7 +88,7 @@ class NavBar extends ConsumerWidget {
                             secondBtnText: 'Logout',
                             onConfirm: () {
                               ref.read(userProvider.notifier).logout(
-                                    context: context,
+                                    context: context,ref: ref,
                                   );
                               //close popup
                               Navigator.of(context).pop();
@@ -189,7 +189,7 @@ class NavBar extends ConsumerWidget {
                                       onConfirm: () {
                                         ref
                                             .read(userProvider.notifier)
-                                            .logout(context: context);
+                                            .logout(context: context,ref: ref);
                                         Navigator.of(context).pop();
                                       },
                                     );

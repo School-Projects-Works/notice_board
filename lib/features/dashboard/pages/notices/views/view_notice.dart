@@ -25,13 +25,13 @@ class ViewNotice extends ConsumerStatefulWidget {
 }
 
 class _ViewNoticeState extends ConsumerState<ViewNotice> {
-final TextEditingController _commentController = TextEditingController();
+  final TextEditingController _commentController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var style = Styles(context);
     var noticeStream = ref.watch(noticeListStream);
     return noticeStream.when(data: (data) {
-      var noticeList = ref.watch(noticeListProvider).filteredList;
+      var noticeList = ref.watch(noticeListProvider).noticeRawList.toList();
       var notice =
           noticeList.firstWhere((element) => element.id == widget.noticeId);
       return style.largerThanMobile
@@ -118,9 +118,22 @@ final TextEditingController _commentController = TextEditingController();
                         const SizedBox(
                           height: 10,
                         ),
-                        Text('For: ${notice.affliation.join(', ')} Students',
-                            style: style.body(
-                                color: Colors.black45, fontSize: 14)),
+                        Row(
+                          children: [
+                            Text(
+                                'For: ${notice.affliation.join(', ')} Students',
+                                style: style.body(
+                                    color: Colors.black45, fontSize: 14)),
+                          ],
+                        ),
+                        if (style.isMobile)
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                            decoration: BoxDecoration(
+                              color: notice.status=='published'?Colors.green:notice.status=='rejected'?Colors.red:Colors.grey,
+                                borderRadius: BorderRadius.circular(5)),
+                                child: Text(notice.status, style: style.body(color: Colors.white),),
+                          ),
                         const SizedBox(
                           height: 10,
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notice_board/features/dashboard/pages/request/provider/request_provider.dart';
 import 'package:notice_board/features/dashboard/pages/secretaries/provider/secretaries_provider.dart';
 import 'package:notice_board/features/dashboard/pages/students/provider/students_provider.dart';
 import 'package:notice_board/features/notice/provider/notice_provider.dart';
@@ -25,15 +26,12 @@ class DashBoardMainPage extends ConsumerWidget {
     var noticeStream = ref.watch(noticeListStream);
     var affiliationStream = ref.watch(dashAffiStreamProvider);
     var studentsStream = ref.watch(studentsStreamProvider);
+    var requestStream = ref.watch(requestStreamProvider);
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
             backgroundColor: primaryColor,
             actions: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications, color: Colors.white),
-              ),
               const SizedBox(width: 10),
               PopupMenuButton(
                   color: primaryColor,
@@ -77,7 +75,7 @@ class DashBoardMainPage extends ConsumerWidget {
                                 onConfirm: () {
                                   ref
                                       .read(userProvider.notifier)
-                                      .logout(context: context);
+                                      .logout(context: context, ref: ref);
                                   Navigator.of(context).pop();
                                 },
                               );
@@ -133,14 +131,24 @@ class DashBoardMainPage extends ConsumerWidget {
                                             data: (notice) {
                                               return studentsStream.when(
                                                 data: (students) {
+                                                  return requestStream.when(
+                                                      data: (data){
+
                                                   return child;
+                                                      },
+                                                      error: (error,stack){
+                                                        return Center(child: Text(error.toString()));
+                                                      },
+                                                      loading: () => const Center(child: CircularProgressIndicator())); 
                                                 },
                                                 error: (error, stack) {
                                                   return Center(
-                                                      child: Text(error.toString()));
+                                                      child: Text(
+                                                          error.toString()));
                                                 },
                                                 loading: () => const Center(
-                                                    child: CircularProgressIndicator()),
+                                                    child:
+                                                        CircularProgressIndicator()),
                                               );
                                             },
                                             error: (error, stack) {

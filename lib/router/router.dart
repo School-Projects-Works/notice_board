@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:notice_board/features/auth/views/registration_page.dart';
 import 'package:notice_board/features/dashboard/pages/notices/views/notices_page.dart';
 import 'package:notice_board/features/dashboard/pages/request/views/request_page.dart';
+import 'package:notice_board/features/dashboard/pages/request/views/view_request.dart';
 import 'package:notice_board/features/home/views/home_page.dart';
 import 'package:notice_board/router/router_items.dart';
 
@@ -73,8 +74,8 @@ class MyRouter {
                         var noticeId = state.pathParameters['noticeId'];
                         return NoticeDetailsPage(noticeId: noticeId!);
                       }),
-                 ]),
-                  ShellRoute(
+                ]),
+            ShellRoute(
                 builder: (context, state, child) {
                   return DashBoardMainPage(
                     child,
@@ -116,15 +117,21 @@ class MyRouter {
                       builder: (context, state) {
                         return const AffiliationsPage();
                       }),
-                      GoRoute(
+                  GoRoute(
                       path: RouterItem.dashNoticeDetailsRoute.path,
                       name: RouterItem.dashNoticeDetailsRoute.name,
                       builder: (context, state) {
                         var noticeId = state.pathParameters['noticeId'];
                         return ViewNotice(noticeId: noticeId!);
                       }),
+                  GoRoute(
+                      path: RouterItem.viewRequestRoute.path,
+                      name: RouterItem.viewRequestRoute.name,
+                      builder: (context, state) {
+                        var id = state.pathParameters['id'];
+                        return ViewRequest(id!);
+                      }),
                 ])
-                
           ]);
 
   void navigateToRoute(RouterItem item) {

@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_network/image_network.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:notice_board/core/views/custom_drop_down.dart';
@@ -61,7 +62,8 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
           const SizedBox(
             height: 20,
           ),
-          if (!ref.watch(isNewNotice))
+          if (!ref.watch(isNewNotice) &&
+              ref.watch(editNoticeProvider).id.isEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -86,6 +88,7 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
               ],
             ),
           if (ref.watch(isNewNotice)) _buildAddNotice(),
+          if (ref.watch(editNoticeProvider).id.isNotEmpty) _buildEditNotice(),
           const SizedBox(
             height: 20,
           ),
@@ -113,10 +116,6 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
                   label: Text('Title'.toUpperCase()),
                   size: ColumnSize.L,
                 ),
-                // DataColumn2(
-                //   label: Text('Content'.toUpperCase()),
-                //   size: ColumnSize.L,
-                // ),
                 DataColumn2(
                   label: Text('Affiliations'.toUpperCase()),
                   size: ColumnSize.M,
@@ -146,10 +145,6 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
                   cells: [
                     DataCell(Text('${index + 1}', style: rowStyles)),
                     DataCell(Text(notice.title, style: rowStyles)),
-                    // DataCell(Text(notice.description,
-                    //     maxLines: 2,
-                    //     overflow: TextOverflow.ellipsis,
-                    //     style: rowStyles)),
                     DataCell(Text(notice.affliation.join(','),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -182,31 +177,110 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
                             onPressed: () {
                               MyRouter(context: context, ref: ref)
                                   .navigateToNamed(
-                                    item: RouterItem.dashNoticeDetailsRoute,
-                                    pathPrams: {'noticeId': notice.id},
-                                  );
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {},
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              CustomDialogs.showDialog(
-                                message:
-                                    'Are you sure you want to delete this Affiliation?',
-                                secondBtnText: 'Delete',
-                                type: DialogType.warning,
-                                onConfirm: () {
-                                  ref
-                                      .read(noticeListProvider.notifier)
-                                      .unpublish(notice, ref);
-                                },
+                                item: RouterItem.dashNoticeDetailsRoute,
+                                pathPrams: {'noticeId': notice.id},
                               );
                             },
                           ),
+                          if (notice.posterId == user.id)
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                ref
+                                    .read(editNoticeProvider.notifier)
+                                    .setNotice(notice);
+                              },
+                            ),
+                          PopupMenuButton(
+                              icon: const Icon(Icons.apps),
+                              onSelected: (value) {
+                                if (value == 'publish') {
+                                  CustomDialogs.showDialog(
+                                      message:
+                                          'Are you sure you want to publish this notice?',
+                                      secondBtnText: 'Publish',
+                                      onConfirm: () {
+                                        ref
+                                            .read(noticeListProvider.notifier)
+                                            .updateNotice(
+                                                id: notice.id,
+                                                status: 'published');
+                                      });
+                                }
+                                if (value == 'unpublish') {
+                                  CustomDialogs.showDialog(
+                                      message:
+                                          'Are you sure you want to unpublish this notice?',
+                                      secondBtnText: 'Unpublish',
+                                      onConfirm: () {
+                                        ref
+                                            .read(noticeListProvider.notifier)
+                                            .updateNotice(
+                                                id: notice.id,
+                                                status: 'unpublished');
+                                      });
+                                }
+                                if (value == 'delete') {
+                                  CustomDialogs.showDialog(
+                                      message:
+                                          'Are you sure you want to delete this notice?',
+                                      secondBtnText: 'Delete',
+                                      onConfirm: () {
+                                        ref
+                                            .read(noticeListProvider.notifier)
+                                            .deleteNotice(notice.id);
+                                      });
+                                }
+                              },
+                              itemBuilder: (context) {
+                                return [
+                                  if (notice.status == 'unpublished')
+                                    const PopupMenuItem(
+                                      padding:
+                                          EdgeInsets.only(right: 30, left: 10),
+                                      value: 'publish',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.publish),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text('Publish'),
+                                        ],
+                                      ),
+                                    ),
+                                  if (notice.status == 'published')
+                                    const PopupMenuItem(
+                                      padding:
+                                          EdgeInsets.only(right: 30, left: 10),
+                                      value: 'unpublish',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.remove_red_eye),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text('Unpublish'),
+                                        ],
+                                      ),
+                                    ),
+                                  //delete
+                                  const PopupMenuItem(
+                                    padding:
+                                        EdgeInsets.only(right: 30, left: 10),
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.delete),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('Delete'),
+                                      ],
+                                    ),
+                                  ),
+                                ];
+                              }),
                         ],
                       ),
                     ),
@@ -459,6 +533,260 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
       }
       ref.read(noticeImageProvider.notifier).addImage(images);
     }
+  }
+
+  final TextEditingController _editController = TextEditingController();
+  final _editFormKey = GlobalKey<FormState>();
+  Widget _buildEditNotice() {
+    var affi = ref.watch(dashAffiliationProvider).list;
+    var items = affi.map((e) => e.name).toList();
+    items.insert(0, 'All');
+    var notifier = ref.read(editNoticeProvider.notifier);
+    var provider = ref.watch(editNoticeProvider);
+    _editController.text = provider.description;
+    var style = Styles(context);
+    return Container(
+      decoration: BoxDecoration(
+          color: primaryColor.withOpacity(.1),
+          borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.all(10),
+      child: Form(
+        key: _formKey,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              children: [
+                SizedBox(
+                  width: 350,
+                  child: Column(
+                    children: [
+                      CustomTextFields(
+                        label: 'Notice Title',
+                        initialValue: provider.title,
+                        validator: (title) {
+                          if (title == null || title.isEmpty) {
+                            return 'Title is required';
+                          }
+                          return null;
+                        },
+                        onSaved: (title) {
+                          notifier.setTitle(title!);
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextButton.icon(
+                          onPressed: () {
+                            _pickImages();
+                          },
+                          label: const Text('Add Image'),
+                          icon: const Icon(Icons.image)),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (ref.watch(noticeImageProvider).isNotEmpty)
+                        Wrap(
+                          children: ref
+                              .watch(noticeImageProvider)
+                              .map((e) => Container(
+                                    width: 100,
+                                    height: 100,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 3),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(color: Colors.black),
+                                        image: DecorationImage(
+                                            image: MemoryImage(e),
+                                            fit: BoxFit.cover)),
+                                    //delete button
+                                    child: Align(
+                                      alignment: Alignment.topRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          ref
+                                              .read(
+                                                  noticeImageProvider.notifier)
+                                              .removeImage(e);
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(.5),
+                                              shape: BoxShape.circle),
+                                          child: const Icon(
+                                            Icons.cancel,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        )
+                      else if (provider.images.isNotEmpty)
+                        Wrap(
+                          children: provider.images
+                              .map((e) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Container(
+                                      width: 100,
+                                      height: 110,
+                                      padding: const EdgeInsets.all(5),
+                                      decoration:
+                                          BoxDecoration(border: Border.all()),
+                                      child: ImageNetwork(
+                                        image: e,
+                                        width: 100,
+                                        height: 100,
+                                        fitAndroidIos: BoxFit.fill,
+                                        fitWeb: BoxFitWeb.fill,
+                                      ),
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 500,
+                  child: Column(
+                    children: [
+                      CustomTextFields(
+                        maxLines: 5,
+                        controller: _editController,
+                        label: 'Notice Content',
+                        validator: (content) {
+                          if (content == null || content.isEmpty) {
+                            return 'Content is required';
+                          }
+                          return null;
+                        },
+                        onSaved: (content) {
+                          notifier.setContent(content!);
+                        },
+                      ),
+                      MarkdownToolbar(
+                        useIncludedTextField: false,
+                        iconSize: 18,
+                        controller: _editController,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  width: 400,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CustomDropDown(
+                          items: items
+                              .map((e) =>
+                                  DropdownMenuItem(value: e, child: Text(e)))
+                              .toList(),
+                          label: 'Select Affiliation',
+                          onChanged: ref
+                                  .watch(editNoticeProvider)
+                                  .affliation
+                                  .contains('All')
+                              ? null
+                              : (value) {
+                                  notifier.addAffiliation(value.toString());
+                                },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Wrap(
+                          children: ref
+                              .watch(editNoticeProvider)
+                              .affliation
+                              .map((aff) => Container(
+                                    width: 300,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 3),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 5),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(5),
+                                        color: secondaryColor),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            aff,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style:
+                                                style.body(color: Colors.white),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        InkWell(
+                                            onTap: () {
+                                              notifier.removeAff(aff);
+                                            },
+                                            child: const Icon(
+                                              Icons.cancel,
+                                              size: 18,
+                                            ))
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        CustomButton(
+                            text: 'Update',
+                            onPressed: () {
+                              if (_editFormKey.currentState!.validate()) {
+                                _editFormKey.currentState!.save();
+                                if (ref
+                                    .watch(editNoticeProvider)
+                                    .affliation
+                                    .isEmpty) {
+                                  CustomDialogs.toast(
+                                      message: 'Add Affiliation',
+                                      type: DialogType.error);
+                                  return;
+                                }
+                                notifier.updateNotice(ref);
+                                _editFormKey.currentState!.reset();
+                              }
+                            }),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            )),
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                ref.read(editNoticeProvider.notifier).removeNotice();
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

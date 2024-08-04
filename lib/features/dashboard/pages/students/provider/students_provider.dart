@@ -1,6 +1,8 @@
 import 'package:riverpod/riverpod.dart';
 
+import '../../../../../core/views/custom_dialog.dart';
 import '../../../../auth/data/user_model.dart';
+import '../../../../auth/services/user_services.dart';
 import '../services/students_services.dart';
 
 final studentsStreamProvider = StreamProvider<List<UserModel>>((ref)async* {
@@ -48,6 +50,34 @@ class StudentsProvider extends StateNotifier<StudentsFilter> {
         return element.name.toLowerCase().contains(query.toLowerCase());
       }).toList();
       state = state.copyWith(filter: data);
+    }
+  }
+
+  void block(UserModel secretary) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Blocking secretary');
+    var data = await UserServices.updateUser(
+        id: secretary.id, data: {'status': 'banned'});
+    if (data) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Secretary blocked successfully');
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Failed to block secretary');
+    }
+  }
+
+  void unblock(UserModel secretary) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Unblocking secretary');
+    var data = await UserServices.updateUser(
+        id: secretary.id, data: {'status': 'active'});
+    if (data) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Secretary unblocked successfully');
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Failed to unblock secretary');
     }
   }
 }

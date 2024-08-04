@@ -33,6 +33,7 @@ dependencies:
   modal_bottom_sheet: ^3.0.0
   data_table_2: ^2.5.15
   markdown_toolbar: ^0.5.0
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

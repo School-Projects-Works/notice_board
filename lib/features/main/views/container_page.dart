@@ -4,8 +4,10 @@ import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
 import 'package:notice_board/features/affiliations/services/affiliation_services.dart';
 import 'package:notice_board/features/comments/data/comments_model.dart';
 import 'package:notice_board/features/comments/services/comment_services.dart';
+import 'package:notice_board/features/dashboard/pages/request/data/request_model.dart';
 import 'package:notice_board/features/notice/data/notice_model.dart';
 import 'package:notice_board/utils/styles.dart';
+import '../../dashboard/pages/request/services/request_services.dart';
 import '../../notice/services/notice_services.dart';
 import '../components/nav_bar.dart';
 
@@ -61,6 +63,12 @@ class ContainerPage extends ConsumerWidget {
       // for (var item in notice) {
       //   item= item.copyWith(status: 'published');
       //   await NoticeServices.updateNotice(item);
+      // }
+
+      // var requestData = RequestModel.dummyData();
+      // for (var item in requestData) {
+      //   item.copyWith(createdAt: DateTime.now().millisecondsSinceEpoch);
+      //   await RequestServices.addRequest(item);
       // }
       return true;
     } catch (e) {

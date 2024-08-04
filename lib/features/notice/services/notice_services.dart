@@ -23,9 +23,9 @@ class NoticeServices {
     }
   }
 
-  static Future<bool> updateNotice(NoticeModel notice) async {
+  static Future<bool> updateNotice({required String id, required Map<String,dynamic> data}) async {
     try {
-      await _noticeCollection.doc(notice.id).update(notice.toMap());
+      await _noticeCollection.doc(id).update(data);
       return true;
     } catch (e) {
       return false;

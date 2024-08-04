@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notice_board/core/views/custom_dialog.dart';
 import '../../notice/data/notice_model.dart';
 import '../../notice/services/notice_services.dart';
 import '../data/notice_list_model.dart';
@@ -22,12 +23,21 @@ final noticeListProvider =
 
 class NoticeList extends StateNotifier<NoticeListModel> {
   NoticeList({required this.ref})
-      : super(NoticeListModel(noticeList: [], filteredList: [], noticeRawList: [], filteredRawList: []));
+      : super(NoticeListModel(
+            noticeList: [],
+            filteredList: [],
+            noticeRawList: [],
+            filteredRawList: []));
   final StateNotifierProviderRef<NoticeList, NoticeListModel> ref;
 
   void setNoticeList(List<NoticeModel> list) {
-    var publishedList = list.where((element) => element.status == 'published').toList();
-    state = state.copyWith(noticeList: publishedList, filteredList: publishedList, noticeRawList: list, filteredRawList: list);
+    var publishedList =
+        list.where((element) => element.status == 'published').toList();
+    state = state.copyWith(
+        noticeList: publishedList,
+        filteredList: publishedList,
+        noticeRawList: list,
+        filteredRawList: list);
   }
 
   void search(String query) {
@@ -64,7 +74,36 @@ class NoticeList extends StateNotifier<NoticeListModel> {
     state = state.copyWith(filteredRawList: list);
   }
 
-  void unpublish(NoticeModel notice, WidgetRef ref) {}
+  void updateNotice({required String id, required String status})async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Updating Notice...');
+    var responds = await NoticeServices.updateNotice(id: id, data: {'status': status});
+    if (responds) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Notice Updated Successfully', type: DialogType.success);
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Update Notice', type: DialogType.error);
+    }
+
+  }
+
+  void deleteNotice(String id)async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Deleting Notice...');
+    var responds = await NoticeServices.deleteNotice(id);
+    if (responds) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Notice Deleted Successfully', type: DialogType.success);
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to Delete Notice', type: DialogType.error);
+    }
+  }
 }
 
 final selectedAffiliation = StateProvider<String>((ref) => 'All');

@@ -35,12 +35,25 @@ static final RouterItem profileRoute =
       RouterItem(path: '/profile', name: 'profile');
 static final RouterItem studentsRoute =
       RouterItem(path: '/students', name: 'students');
+
+static final RouterItem viewRequestRoute =
+      RouterItem(path: '/view-request/:id', name: 'viewRequestRoute');
 static List<RouterItem> allRoutes = [
     homeRoute,
     loginRoute,
     dashboardRoute,
     departmentsRoute,
     noticeRoute,
+    requestRoute,
+    secretariesRoute,
+    noticeDetailsRoute,
+    dashNoticeDetailsRoute,
+    viewRequestRoute,
+    profileRoute,
+    studentsRoute,
+    registerRoute,
+    forgotPasswordRoute
+    
   ];
 
   static RouterItem getRouteByPath(String fullPath) {

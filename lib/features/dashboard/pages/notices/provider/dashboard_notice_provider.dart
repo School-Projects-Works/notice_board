@@ -90,3 +90,82 @@ class NoticeImages extends StateNotifier<List<Uint8List>> {
     state = images;
   }
 }
+
+final editNoticeProvider =
+    StateNotifierProvider<EditNotice, NoticeModel>((ref) => EditNotice());
+
+class EditNotice extends StateNotifier<NoticeModel> {
+  EditNotice()
+      : super(NoticeModel(
+          id: '',
+          title: '',
+          description: '',
+          contact: '',
+          posterId: '',
+          posterName: '',
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+        ));
+
+  void setNotice(NoticeModel notice) {
+    state = notice;
+  }
+
+  void setContent(String s) {
+    state = state.copyWith(description: s);
+  }
+
+  void setTitle(String s) {
+    state = state.copyWith(title: s);
+  }
+
+  void addAffiliation(String string) {
+    var data = state.affliation.toList();
+    data.add(string);
+    state = state.copyWith(affliation: data);
+  }
+
+  void removeAff(String aff) {
+    var data = state.affliation.toList();
+    data.remove(aff);
+    state = state.copyWith(affliation: data);
+  }
+
+  void removeNotice() {
+    state = NoticeModel(
+      id: '',
+      title: '',
+      description: '',
+      contact: '',
+      posterId: '',
+      posterName: '',
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+    );
+  }
+
+  void updateNotice(WidgetRef ref) async {
+    CustomDialogs.loading(message: 'Updating Notice....');
+    var image = ref.watch(noticeImageProvider);
+    if (image.isNotEmpty) {
+      var urls = await NoticeServices.uploadNoticeImages(state.id, image);
+      state = state.copyWith(images: urls);
+    }
+    var result = await NoticeServices.updateNotice(id: state.id, data: state.toMap());
+    if (result) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Notice Updated');
+      state = NoticeModel(
+        id: '',
+        title: '',
+        description: '',
+        contact: '',
+        posterId: '',
+        posterName: '',
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+      );
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(message: 'Failed to update notice');
+    }
+    
+  }
+}

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
@@ -9,14 +10,13 @@ import 'package:notice_board/router/router_items.dart';
 import '../../../core/local_storage.dart';
 import '../services/user_services.dart';
 
-final userProvider =
-    StateNotifierProvider<UserProvider, UserModel>((ref) {
-      var user = LocalStorage.getData('user');
+final userProvider = StateNotifierProvider<UserProvider, UserModel>((ref) {
+  var user = LocalStorage.getData('user');
   if (user != null) {
     return UserProvider()..updateUer(UserModel.fromJson(user).id);
   }
   return UserProvider();
-      });
+});
 
 class UserProvider extends StateNotifier<UserModel> {
   UserProvider()
@@ -33,8 +33,22 @@ class UserProvider extends StateNotifier<UserModel> {
     state = user;
   }
 
-  void logout({required BuildContext context}) async {}
-  
+  void logout({required BuildContext context, required WidgetRef ref}) async {
+    CustomDialogs.dismiss();
+    CustomDialogs.loading(message: 'Logging out...');
+    LocalStorage.removeData('user');
+    await FirebaseAuth.instance.signOut();
+    state = UserModel(
+      id: '',
+      email: '',
+      name: '',
+      phone: '',
+      role: '',
+    );
+    CustomDialogs.dismiss();
+    MyRouter(context: context, ref: ref).navigateToRoute(RouterItem.loginRoute);
+  }
+
   updateUer(String? id) async {
     var userData = await UserServices.getUserData(id!);
     if (userData != null) {
@@ -124,7 +138,7 @@ class LoginProvider extends StateNotifier<LoginModel> {
       message: 'Logging in...',
     );
     var (user, userModel, message) = await UserServices.loginUser(state);
-    if (user != null && user.emailVerified||(userModel!.role=='admin')) {
+    if (user != null && user.emailVerified || (userModel!.role == 'admin')) {
       if (userModel == null) {
         CustomDialogs.dismiss();
         CustomDialogs.toast(

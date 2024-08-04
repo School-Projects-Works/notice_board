@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/features/dashboard/pages/affiliations/provider/dash_affi_provider.dart';
+import 'package:notice_board/features/dashboard/pages/request/provider/request_provider.dart';
 import 'package:notice_board/features/dashboard/pages/secretaries/provider/secretaries_provider.dart';
 import 'package:notice_board/features/dashboard/pages/students/provider/students_provider.dart';
 import 'package:notice_board/features/notice/provider/notice_provider.dart';
+import 'package:notice_board/router/router.dart';
+import 'package:notice_board/router/router_items.dart';
 import 'package:notice_board/utils/styles.dart';
 
 import '../../../../../utils/colors.dart';
@@ -29,6 +32,7 @@ class _DashboardHomePageState extends ConsumerState<DashboardHomePage> {
         (element) =>element.posterId==user.id ).toList();
     var affilationList = ref.watch(dashAffiliationProvider);
     var studentsList = ref.watch(studentsProvider);
+    var requests = ref.watch(requestFilterProvider);
     return Container(
         color: Colors.white,
         width: double.infinity,
@@ -54,14 +58,18 @@ class _DashboardHomePageState extends ConsumerState<DashboardHomePage> {
                       title: 'Secretaries'.toUpperCase(),
                       itemCount: secretariesList.list.length,
                       color: Colors.blue,
-                      onTap: () {},
+                      onTap: () {
+                        MyRouter(context: context,ref: ref).navigateToRoute(RouterItem.secretariesRoute);
+                      },
                     ),
                     DashBoardItem(
                       icon: Icons.people_alt_outlined,
                       title: 'Affiliations'.toUpperCase(),
                       itemCount: affilationList.list.length,
                       color: Colors.green,
-                      onTap: () {},
+                      onTap: () {
+                        MyRouter(context: context,ref: ref).navigateToRoute(RouterItem.departmentsRoute);
+                      },
                     ),
                   DashBoardItem(
                     icon: Icons.hotel,
@@ -70,14 +78,27 @@ class _DashboardHomePageState extends ConsumerState<DashboardHomePage> {
                         ? noticesList.noticeRawList.length
                         : secretaryNotices.length,
                     color: Colors.orange,
-                    onTap: () {},
+                    onTap: () {
+                      MyRouter(context: context,ref: ref).navigateToRoute(RouterItem.noticeRoute);
+                    },
                   ),
                   DashBoardItem(
                     icon: Icons.room,
                     title: 'Students'.toUpperCase(),
                     itemCount: studentsList.list.length,
                     color: Colors.pink,
-                    onTap: () {},
+                    onTap: () {
+                      MyRouter(context: context,ref: ref).navigateToRoute(RouterItem.studentsRoute);
+                    },
+                  ),
+                  DashBoardItem(
+                    icon: Icons.request_page,
+                    title: 'Requests'.toUpperCase(),
+                    itemCount: requests.list.length,
+                    color: Colors.purple,
+                    onTap: () {
+                      MyRouter(context: context,ref: ref).navigateToRoute(RouterItem.requestRoute);
+                    },
                   ),
                 ],
               ),
