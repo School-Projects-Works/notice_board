@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
 import 'package:notice_board/features/auth/data/login_model.dart';
 import 'package:notice_board/features/auth/data/user_model.dart';
 import 'package:notice_board/router/router.dart';
 import 'package:notice_board/router/router_items.dart';
-
 import '../../../core/local_storage.dart';
 import '../services/user_services.dart';
 
+final userImageProvider = StateProvider<Uint8List?>((ref) => null);
 final userProvider = StateNotifierProvider<UserProvider, UserModel>((ref) {
   var user = LocalStorage.getData('user');
   if (user != null) {
@@ -62,6 +63,49 @@ class UserProvider extends StateNotifier<UserModel> {
       }
 
       state = userData;
+    }
+  }
+
+  void setName(String? s) {
+    state = state.copyWith(name: s);
+  }
+
+  void setPhone(String? s) {
+    state = state.copyWith(phone: s);
+  }
+
+  void addAffiliation(String string) {
+    var affi = state.affiliations.toList();
+    if (!affi.contains(string)) {
+      affi.add(string);
+    }
+    state = state.copyWith(affiliations: affi);
+  }
+
+  void removeAff(String string) {
+    var aff = state.affiliations.toList();
+    aff.remove(string);
+    state = state.copyWith(affiliations: aff);
+  }
+
+  void updateProfile(WidgetRef ref) async {
+    CustomDialogs.loading(message: 'Updating user...');
+    var image = ref.watch(userImageProvider);
+    if (image != null) {
+      var url = await UserServices.uploadUserImage(state.id, image);
+      if (url.isNotEmpty) {
+        state = state.copyWith(image: url);
+      }
+    }
+    var status =
+        await UserServices.updateUser(id: state.id, data: state.toMap());
+        // save in local storage
+    LocalStorage.saveData('user', state.toJson());
+    CustomDialogs.dismiss();
+    if (status) {
+      CustomDialogs.toast(message: 'User updated successfully');
+    } else {
+      CustomDialogs.toast(message: 'User not updated', type: DialogType.error);
     }
   }
 }
@@ -157,8 +201,13 @@ class LoginProvider extends StateNotifier<LoginModel> {
       CustomDialogs.dismiss();
       CustomDialogs.toast(message: message, type: DialogType.success);
       ref.read(userProvider.notifier).setUser(userModel);
-      MyRouter(context: context, ref: ref)
-          .navigateToRoute(RouterItem.homeRoute);
+      if (userModel.role == 'student') {
+        MyRouter(context: context, ref: ref)
+            .navigateToRoute(RouterItem.noticeRoute);
+      } else {
+        MyRouter(context: context, ref: ref)
+            .navigateToRoute(RouterItem.dashboardRoute);
+      }
     } else {
       CustomDialogs.dismiss();
       CustomDialogs.showDialog(

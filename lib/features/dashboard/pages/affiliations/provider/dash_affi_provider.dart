@@ -4,6 +4,7 @@ import 'package:notice_board/features/auth/data/user_model.dart';
 
 import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
 import 'package:notice_board/features/affiliations/services/affiliation_services.dart';
+import 'package:notice_board/features/auth/services/user_services.dart';
 
 final dashAffiStreamProvider =
     StreamProvider<List<AffiliationModel>>((ref) async* {
@@ -58,6 +59,8 @@ class AffiProvider extends StateNotifier<AffiliationFilter> {
     CustomDialogs.loading(message: 'Deleting affiliation');
     var data = await AffiliationServices.deleteAffiliation(affiliation.id);
     if (data) {
+      var update = await UserServices.updateUser(
+          id: affiliation.secreataryId, data: {'role': 'student'});
       CustomDialogs.dismiss();
       ref.read(dashAffiStreamProvider);
       CustomDialogs.toast(
@@ -69,6 +72,68 @@ class AffiProvider extends StateNotifier<AffiliationFilter> {
     }
   }
 }
+
+
+final editAffiliationProvider =
+    StateNotifierProvider<EditAffiliation, AffiliationModel>((ref) {
+  return EditAffiliation();
+});
+
+class EditAffiliation extends StateNotifier<AffiliationModel> {
+  EditAffiliation()
+      : super(AffiliationModel(
+            name: '',
+            secreataryName: '',
+            contact: '',
+            id: '',
+            secreataryId: '',
+            createdAt: DateTime.now().millisecondsSinceEpoch));
+
+void setAffiliation(AffiliationModel affiliation) {
+    state = affiliation;
+  }
+  void setName(String name) {
+    state = state.copyWith(name: name);
+  }
+
+  void setScretary(UserModel user) {
+    state = state.copyWith(secreataryName: user.name, secreataryId: user.id);
+  }
+
+  void setContact(String contact) {
+    state = state.copyWith(contact: contact);
+  }
+
+  void reset() {
+    state = AffiliationModel(
+        name: '',
+        secreataryName: '',
+        contact: '',
+        id: '',
+        secreataryId: '',
+        createdAt: DateTime.now().millisecondsSinceEpoch);
+  }
+
+  void save(WidgetRef ref) async {
+    CustomDialogs.loading(message: 'Saving affiliation');
+    var data = await AffiliationServices.updateAffiliation(state.id, state.toMap());
+    
+    if (data) {
+      //make user a secreatary
+      var update = await UserServices.updateUser(id: state.secreataryId, data: {'role':'secreatary'});
+      CustomDialogs.dismiss();
+      ref.read(dashAffiStreamProvider);
+      CustomDialogs.toast(
+          message: 'Affiliation updated', type: DialogType.success);
+      reset();
+    } else {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Failed to update affiliation', type: DialogType.error);
+    }
+  }
+}
+
 
 final newAffProvider =
     StateNotifierProvider<NewAffiliation, AffiliationModel>((ref) {
@@ -112,6 +177,8 @@ class NewAffiliation extends StateNotifier<AffiliationModel> {
     state = state.copyWith(id: AffiliationServices.getAffiliationId(),createdAt: DateTime.now().millisecondsSinceEpoch);
     var data = await AffiliationServices.addAffiliation(state);
     if (data) {
+      var update = await UserServices.updateUser(
+          id: state.secreataryId, data: {'role': 'secreatary'});
       CustomDialogs.dismiss();
       //ref.read(dashAffiStreamProvider);
       CustomDialogs.toast(

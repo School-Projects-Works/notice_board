@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notice_board/core/functions/sms_gpt_model.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
 import 'package:notice_board/features/dashboard/pages/notices/views/notices_page.dart';
+import 'package:notice_board/features/dashboard/pages/students/provider/students_provider.dart';
 import 'package:notice_board/features/notice/data/notice_model.dart';
 import 'package:notice_board/features/notice/services/notice_services.dart';
 
@@ -27,6 +29,7 @@ class NewNoticeProvider extends StateNotifier<NoticeModel> {
   }
 
   void addAffiliation(String string) {
+    if (string.isEmpty || string == 'null') return;
     var affi = state.affliation.toList();
     affi.add(string);
     state = state.copyWith(affliation: affi);
@@ -47,7 +50,29 @@ class NewNoticeProvider extends StateNotifier<NoticeModel> {
     var id = NoticeServices.getNoticeId();
     var user = ref.watch(userProvider);
     var image = ref.watch(noticeImageProvider);
+    //put ai here to check offensive content
+    var content = '${state.title}.${state.description}';
+    var results = await SmsGptModel.contentContainProfain(content);
+    if (results > 2) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Your content contains offensive words. Please remove them');
+      return;
+    }
     if (image.isNotEmpty) {
+      //check if image is offensive
+      for (var image in image) {
+        var result = await SmsGptModel.imageIsProfain(image);
+        if (result > 2) {
+          CustomDialogs.dismiss();
+          CustomDialogs.showDialog(
+              message:
+                  'Your image contains offensive content. Please remove it',
+              type: DialogType.error);
+          return;
+        }
+      }
+
       var urls = await NoticeServices.uploadNoticeImages(id, image);
       state = state.copyWith(images: urls);
     }
@@ -61,6 +86,25 @@ class NewNoticeProvider extends StateNotifier<NoticeModel> {
         status: 'published');
     var result = await NoticeServices.addNotice(state);
     if (result) {
+      //get all the users and send them a notification
+      var users = ref.watch(studentsProvider).list;
+      //check if student has the same affliation
+      if (state.affliation.contains('All')) {
+        for (var element in users) {
+         await SmsGptModel.sendMessage(element.phone,
+              'New notice is available on the notice board. Check it out now');
+        }
+      }else{
+        for (var element in users) {
+          var studentAff = element.affiliations.toList();
+          var noticeAff = state.affliation.toList();
+          var common = studentAff.where((element) => noticeAff.contains(element)).toList();
+          if(common.isNotEmpty){
+            await SmsGptModel.sendMessage(element.phone,
+                'New notice is available on the notice board. Check it out now');
+          }
+        }
+      }
       CustomDialogs.dismiss();
       CustomDialogs.toast(message: 'Notice Published');
       ref.read(isNewNotice.notifier).state = false;
@@ -149,7 +193,8 @@ class EditNotice extends StateNotifier<NoticeModel> {
       var urls = await NoticeServices.uploadNoticeImages(state.id, image);
       state = state.copyWith(images: urls);
     }
-    var result = await NoticeServices.updateNotice(id: state.id, data: state.toMap());
+    var result =
+        await NoticeServices.updateNotice(id: state.id, data: state.toMap());
     if (result) {
       CustomDialogs.dismiss();
       CustomDialogs.toast(message: 'Notice Updated');
@@ -166,6 +211,5 @@ class EditNotice extends StateNotifier<NoticeModel> {
       CustomDialogs.dismiss();
       CustomDialogs.toast(message: 'Failed to update notice');
     }
-    
   }
 }

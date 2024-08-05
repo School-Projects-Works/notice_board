@@ -13,6 +13,7 @@ import '../features/auth/views/login_page.dart';
 import '../features/dashboard/pages/affiliations/views/affiliations_page.dart';
 import '../features/dashboard/pages/home/views/dashboard_home.dart';
 import '../features/dashboard/pages/notices/views/view_notice.dart';
+import '../features/dashboard/pages/profile/views/profile_page.dart';
 import '../features/dashboard/pages/secretaries/views/secretaries_page.dart';
 import '../features/dashboard/pages/students/views/students_pages.dart';
 import '../features/dashboard/views/dashboard_main.dart';
@@ -90,7 +91,7 @@ class MyRouter {
                   GoRoute(
                       path: RouterItem.profileRoute.path,
                       builder: (context, state) {
-                        return Container();
+                        return const ProfilePage();
                       }),
                   GoRoute(
                       path: RouterItem.secretariesRoute.path,

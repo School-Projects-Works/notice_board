@@ -83,6 +83,7 @@ class CustomDropDown extends StatelessWidget {
       items: items,
       validator: validator,
       value: value,
+    
       isExpanded: true,
       icon: Icon(
         iconData ?? Icons.arrow_drop_down,

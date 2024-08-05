@@ -5,12 +5,10 @@ import 'package:notice_board/core/views/custom_button.dart';
 import 'package:notice_board/core/views/custom_drop_down.dart';
 import 'package:notice_board/core/views/custom_input.dart';
 import 'package:notice_board/features/dashboard/pages/affiliations/provider/dash_affi_provider.dart';
-import 'package:notice_board/features/dashboard/pages/secretaries/provider/secretaries_provider.dart';
 import 'package:notice_board/features/dashboard/pages/students/provider/students_provider.dart';
 import 'package:notice_board/features/notice/provider/notice_provider.dart';
 import 'package:notice_board/utils/colors.dart';
 import 'package:notice_board/utils/styles.dart';
-
 import '../../../../../core/views/custom_dialog.dart';
 
 class AffiliationsPage extends ConsumerStatefulWidget {
@@ -66,11 +64,14 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
                   text: 'Add Affiliation',
                   onPressed: () {
                     ref.read(isNewAffiliation.notifier).state = true;
+                    ref.read(editAffiliationProvider.notifier).reset();
                   },
                 )
               ],
             ),
           if (ref.watch(isNewAffiliation)) _buildAddAffiliation(),
+          if (ref.watch(editAffiliationProvider).id.isNotEmpty)
+            _buildEditAffiliation(),
           const SizedBox(
             height: 20,
           ),
@@ -136,6 +137,16 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
                     DataCell(
                       Row(
                         children: [
+                          //edit
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              ref
+                                  .read(editAffiliationProvider.notifier)
+                                  .setAffiliation(affiliations[index]);
+                              ref.read(isNewAffiliation.notifier).state = false;
+                            },
+                          ),
                           IconButton(
                             icon: const Icon(Icons.delete),
                             onPressed: () {
@@ -169,9 +180,8 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
 
   Widget _buildAddAffiliation() {
     var notifier = ref.read(newAffProvider.notifier);
-    var secretaries = ref.watch(secretariesProvider).list;
     var students = ref.watch(studentsProvider).list;
-    var maergedList = [...secretaries, ...students];
+    var maergedList = [...students];
     var names = maergedList.map((e) => e.name).toList();
     return Container(
       padding: const EdgeInsets.all(10),
@@ -257,6 +267,108 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
             icon: const Icon(Icons.close),
             onPressed: () {
               ref.read(isNewAffiliation.notifier).state = false;
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  final _edtFormKey = GlobalKey<FormState>();
+  Widget _buildEditAffiliation() {
+    var notifier = ref.read(editAffiliationProvider.notifier);
+    var provider = ref.watch(editAffiliationProvider);
+    var students = ref.watch(studentsProvider).list;
+    var maergedList = [...students];
+    var names = maergedList.map((e) => e.name).toList();
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: secondaryColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+              child: Form(
+                  key: _edtFormKey,
+                  child: Wrap(runSpacing: 20, spacing: 10, children: [
+                    SizedBox(
+                      width: 350,
+                      child: CustomTextFields(
+                        hintText: 'Affiliation Name',
+                        initialValue: provider.name,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Affiliation name is required';
+                          }
+                          return null;
+                        },
+                        onSaved: (name) {
+                          notifier.setName(name!);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 400,
+                      child: CustomDropDown(
+                        //value: provider.secreataryName.isEmpty?null:provider.secreataryName,
+                        items: names
+                            .map((e) =>
+                                DropdownMenuItem(value: e, child: Text(e)))
+                            .toList(),
+                        validator: (sec) {
+                          if (sec == null) {
+                            return 'Secretary is required';
+                          }
+                          return null;
+                        },
+                        onChanged: (sec) {
+                          if (sec == null) return;
+                          var secretary = maergedList
+                              .firstWhere((element) => element.name == sec);
+                          notifier.setScretary(secretary);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: CustomTextFields(
+                        hintText: 'Contact',
+                        initialValue: provider.contact,
+                        isPhoneInput: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Contact is required';
+                          } else if (value.length < 10) {
+                            return 'Contact must be 10 digits';
+                          }
+                          return null;
+                        },
+                        onSaved: (contact) {
+                          notifier.setContact(contact!);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 200,
+                      child: CustomButton(
+                        text: 'Update',
+                        onPressed: () {
+                          if (_edtFormKey.currentState!.validate()) {
+                            _edtFormKey.currentState!.save();
+                            notifier.save(ref);
+                            _edtFormKey.currentState!.reset();
+                          }
+                        },
+                      ),
+                    )
+                  ]))),
+          IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () {
+              ref.read(isNewAffiliation.notifier).state = false;
+              ref.read(editAffiliationProvider.notifier).reset();
             },
           )
         ],

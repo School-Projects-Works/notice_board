@@ -192,6 +192,7 @@ class _StudentsPagesState extends ConsumerState<StudentsPages> {
                                 color: Colors.green,
                               ),
                             ),
+                            //make student a secretary icon
                         ],
                       ),
                     ),

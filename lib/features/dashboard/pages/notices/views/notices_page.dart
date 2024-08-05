@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:markdown_toolbar/markdown_toolbar.dart';
 import 'package:notice_board/core/views/custom_drop_down.dart';
 import 'package:notice_board/features/dashboard/pages/affiliations/provider/dash_affi_provider.dart';
+import 'package:notice_board/features/dashboard/pages/notices/views/students_notice_page.dart';
+import 'package:notice_board/features/notice/data/notice_model.dart';
 import 'package:notice_board/features/notice/provider/notice_provider.dart';
 import 'package:notice_board/router/router.dart';
 import 'package:notice_board/router/router_items.dart';
@@ -16,6 +18,7 @@ import '../../../../../core/views/custom_input.dart';
 import '../../../../../utils/colors.dart';
 import '../../../../../utils/styles.dart';
 import '../../../../auth/provider/user_provider.dart';
+import '../../../../home/views/components/notice_card.dart';
 import '../provider/dashboard_notice_provider.dart';
 
 class NoticesPage extends ConsumerStatefulWidget {
@@ -31,16 +34,10 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
     var styles = Styles(context);
     var titleStyles = styles.title(color: Colors.white, fontSize: 15);
     var rowStyles = styles.body(fontSize: 13);
-    var notices = ref.watch(noticeListProvider).filteredRawList;
+    var notices = ref.watch(noticeListProvider).filteredRawList.toList();
     var user = ref.watch(userProvider);
     if (user.role == 'student') {
-      notices = notices.where((element) {
-        var userAffi = user.affiliations;
-        var noticeAffi = element.affliation;
-        //check if any of user affiliation is in notice affiliations
-        return userAffi.any((element) => noticeAffi.contains(element));
-      }).toList();
-      return Container();
+      return const StudentsNoticePage();
     }
     if (user.role == 'secretary') {
       notices =
@@ -788,6 +785,8 @@ class _NoticesPageState extends ConsumerState<NoticesPage> {
       ),
     );
   }
-}
+
+  }
 
 final isNewNotice = StateProvider<bool>((ref) => false);
+

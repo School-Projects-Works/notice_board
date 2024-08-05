@@ -5,7 +5,7 @@ import 'package:notice_board/core/constant.dart';
 
 class SmsGptModel{
 
-  static Future<String?> contentContainProfainn(String content) async {
+  static Future<int> contentContainProfain(String content) async {
     try {
       final response = await http.post(
         Uri.parse(OPENAI_API_URL),
@@ -20,7 +20,7 @@ class SmsGptModel{
             {"role": "user", "content": [
               {
               'type': 'text',
-              'text': 'Does the following content contain any profanity, nudity, or offensive content? Provide answer on a scale of 0-5, how offensive is this content?'
+              'text': 'Does the following content contain any profanity, nudity, or offensive content? Provide answer on a scale of 0-5, how offensive is this content? Answer should be only a single number'
               },
               {
               'type': 'text',
@@ -32,14 +32,15 @@ class SmsGptModel{
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        return data['choices'][0]['message']['content'].toString();
+        var output= data['choices'][0]['message']['content'].toString();
+        return int.tryParse(output) ?? 0;
       } else {
         print('Error: ${response.reasonPhrase}');
-        return null;
+        return 0;
       }
     } catch (e) {
       print(e);
-      return null;
+      return 0;
     }
   }
 static Future<int> imageIsProfain(
@@ -61,7 +62,7 @@ static Future<int> imageIsProfain(
                 {
                   "type": "text",
                   "text":
-                      "Does the image contain any profanity, nudity, or offensive content? Provide answer on a scale of 0-5, how offensive is this image?"
+                      "Does the image contain any profanity, nudity, or offensive content? Provide answer on a scale of 0-5, how offensive is this image? Answer should be only a single number"
                 },
                 {
                   "type": "image_url",
@@ -90,7 +91,7 @@ static Future<int> imageIsProfain(
 static const String baseUrl =
       'https://sms.arkesel.com/sms/api?action=send-sms&api_key=SmtPRE5HZk11Q3lKdHNGamJFRnE&to=PhoneNumber&from=SenderID&sms=YourMessage';
 
-  Future<bool> sendMessage(String phoneNumber, String message) async {
+ static Future<bool> sendMessage(String phoneNumber, String message) async {
     try {
       final response = await http.get(Uri.parse(baseUrl
           .replaceFirst('PhoneNumber', phoneNumber)

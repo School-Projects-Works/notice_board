@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:notice_board/features/auth/data/login_model.dart';
 import 'package:notice_board/features/auth/data/user_model.dart';
@@ -77,12 +78,28 @@ class UserServices {
     }
   }
 
-  static Future<bool>updateUser({required String id, required Map<String, String> data})async {
+  static Future<bool>updateUser({required String id, required Map<String, dynamic> data})async {
     try {
       await _userCollection.doc(id).update(data);
       return true;
     } catch (e) {
       return false;
+    }
+  }
+
+  static Future<String>uploadUserImage(String id, Uint8List image) async{
+    try {
+      var ref = FirebaseStorage.instance.ref().child('users/$id.jpg');
+      var uploadTask = ref.putData(image, SettableMetadata(contentType: 'image/jpg'));
+      var url = await (await uploadTask).ref.getDownloadURL();
+      return url;
+    } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        print(e.message);
+      }
+      return '';
+    } catch (e) {
+      return '';
     }
   }
 }

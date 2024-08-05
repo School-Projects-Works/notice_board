@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:notice_board/features/dashboard/pages/request/data/request_model.dart';
 
 class RequestServices{
@@ -41,5 +43,16 @@ class RequestServices{
     return requestCollection.snapshots().map((snapshot) => snapshot.docs
         .map((doc) => RequestModel.fromMap(doc.data() as Map<String, dynamic>))
         .toList());
+  }
+
+  static Future<List<String>>uploadRequestImages(id, List<Uint8List> image) async{
+    List<String> urls = [];
+    for (var img in image) {
+      var ref = FirebaseStorage.instance.ref().child('request/$id/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      await ref.putData(img, SettableMetadata(contentType: 'image/jpg'));
+      var url = await ref.getDownloadURL();
+      urls.add(url);
+    }
+    return urls;
   }
 }

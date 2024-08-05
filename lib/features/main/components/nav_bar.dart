@@ -15,6 +15,7 @@ class NavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var styles = Styles(context);
+    var user = ref.watch(userProvider);
     return Container(
       width: double.infinity,
       color: primaryColor,
@@ -60,15 +61,20 @@ class NavBar extends ConsumerWidget {
                             RouterItem.loginRoute.name,
                         icon: Icons.login),
                   ),
-                if (ref.watch(userProvider).id.isNotEmpty)
+                if (user.id.isNotEmpty)
                   PopupMenuItem(
                     child: BarItem(
                         padding: const EdgeInsets.only(
                             right: 40, top: 10, bottom: 10, left: 10),
                         title: 'Dashboard',
                         onTap: () {
-                          MyRouter(ref: ref, context: context)
+                          if(user.role=='student') {
+                            MyRouter(ref: ref, context: context)
+                              .navigateToRoute(RouterItem.noticeRoute);
+                          }else{
+                            MyRouter(ref: ref, context: context)
                               .navigateToRoute(RouterItem.dashboardRoute);
+                          }
                           Navigator.of(context).pop();
                         },
                         isActive: ref.watch(routerProvider) ==
@@ -164,9 +170,14 @@ class NavBar extends ConsumerWidget {
                                 title: 'Dashboard',
                                 icon: Icons.dashboard,
                                 onTap: () {
+                                  if(user.role=='student') {
+                                    MyRouter(ref: ref, context: context)
+                                      .navigateToRoute(RouterItem.noticeRoute);
+                                  }else{
                                   MyRouter(ref: ref, context: context)
                                       .navigateToRoute(
                                           RouterItem.dashboardRoute);
+                                  }
                                   Navigator.of(context).pop();
                                 },
                                 isActive: ref.watch(routerProvider) ==

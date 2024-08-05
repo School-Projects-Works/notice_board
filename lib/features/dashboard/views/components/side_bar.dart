@@ -155,6 +155,19 @@ class SideBar extends ConsumerWidget {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: SideBarItem(
+            title: 'My Requests',
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            icon: Icons.request_page,
+            isActive: ref.watch(routerProvider) == RouterItem.requestRoute.name,
+            onTap: () {
+              MyRouter(context: context, ref: ref)
+                  .navigateToRoute(RouterItem.requestRoute);
+            },
+          ),
+        ),
         //profile
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),

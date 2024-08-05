@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:faker/faker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart';
 
 import '../../../../../constants/constant_data.dart';
 import '../services/request_services.dart';
@@ -136,6 +137,22 @@ class RequestModel {
         images.hashCode ^
         status.hashCode ^
         createdAt.hashCode;
+  }
+
+  static RequestModel defualt() {
+    return RequestModel(
+      id: '',
+      title: '',
+      description: '',
+      posterId: '',
+      posterName: '',
+      contact: '',
+      email: '',
+      affliation: [],
+      images: [],
+      status: 'pending',
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+    );
   }
 
   static List<RequestModel> dummyData() {
