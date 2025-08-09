@@ -186,7 +186,7 @@ class LoginProvider extends StateNotifier<LoginModel> {
       if (userModel == null) {
         CustomDialogs.dismiss();
         CustomDialogs.toast(
-            message: 'Uanable to get User Data', type: DialogType.error);
+            message: 'Unable to get User Data', type: DialogType.error);
         return;
       }
       if (userModel.status.toLowerCase() == 'banned') {

@@ -17,19 +17,21 @@ class ContainerPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: const PreferredSize(
-          preferredSize: Size.fromHeight(100), child: NavBar()),
-      body: FutureBuilder<bool>(
-          future: saveDummyData(),
-          builder: (context, snapshot) {
-            return Container(
-              color: Colors.white54,
-              child: Center(
-                child: child,
-              ),
-            );
-          }),
+    return SafeArea(
+      child: Scaffold(
+        appBar: const PreferredSize(
+            preferredSize: Size.fromHeight(100), child: NavBar()),
+        body: FutureBuilder<bool>(
+            future: saveDummyData(),
+            builder: (context, snapshot) {
+              return Container(
+                color: Colors.white54,
+                child: Center(
+                  child: child,
+                ),
+              );
+            }),
+      ),
     );
   }
 
@@ -40,8 +42,8 @@ class ContainerPage extends ConsumerWidget {
       // for (var item in data) {
       //   await AffiliationServices.addAffiliation(item);
       // }
-      // var data = NoticeModel.dummyNotice();
-      // for (var item in data) {
+      // var data2 = NoticeModel.dummyNotice();
+      // for (var item in data2) {
       //   await NoticeServices.addNotice(item);
       // }
 
@@ -51,6 +53,7 @@ class ContainerPage extends ConsumerWidget {
       //   for (var comment in comments) {
       //     comment= comment.copyWith(noticeId: item.id,
       //     createdAt: DateTime.now().millisecondsSinceEpoch,
+
       //     id: CommentServices.getCommentId()
       //     );
 
@@ -58,11 +61,11 @@ class ContainerPage extends ConsumerWidget {
       //   }
       // }
 
-      //update notice status
-      // var notice =await NoticeServices.getAllNotice();
-      // for (var item in notice) {
+      // // update notice status
+      // var notice2 =await NoticeServices.getAllNotice();
+      // for (var item in notice2) {
       //   item= item.copyWith(status: 'published');
-      //   await NoticeServices.updateNotice(item);
+      //   await NoticeServices.updateNotice(id: item.id, data: item.toMap());
       // }
 
       // var requestData = RequestModel.dummyData();

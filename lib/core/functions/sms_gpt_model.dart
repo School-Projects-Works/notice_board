@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
-import 'package:notice_board/core/constant.dart';
+import '../../constants/api_data.dart';
 
 class SmsGptModel{
 

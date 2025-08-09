@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCEIxj3jUR9NvWAqGVoQCAdRJnJYb-Fn6E',
-    appId: '1:220581760995:web:4543b2a534254c11699ad6',
-    messagingSenderId: '220581760995',
-    projectId: 'onnline-notice-board',
-    authDomain: 'onnline-notice-board.firebaseapp.com',
-    storageBucket: 'onnline-notice-board.appspot.com',
+    apiKey: 'AIzaSyDFE0_Nxx-VY5Ck4qjXk4x8KAYxyykPqPA',
+    appId: '1:647401509177:web:336769d95565ba0f0e58e8',
+    messagingSenderId: '647401509177',
+    projectId: 'notice-board-c28f7',
+    authDomain: 'notice-board-c28f7.firebaseapp.com',
+    storageBucket: 'notice-board-c28f7.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyClGflPLDrgChygXfbDxHy6650ex6C8ZBA',
-    appId: '1:220581760995:android:f16b73f637a6b7bc699ad6',
-    messagingSenderId: '220581760995',
-    projectId: 'onnline-notice-board',
-    storageBucket: 'onnline-notice-board.appspot.com',
+    apiKey: 'AIzaSyCQ3nEx6HvbWAWTR9gCKoZdAnnZPLdmpF0',
+    appId: '1:647401509177:android:addf3d2bec198f9d0e58e8',
+    messagingSenderId: '647401509177',
+    projectId: 'notice-board-c28f7',
+    storageBucket: 'notice-board-c28f7.firebasestorage.app',
   );
 }

@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "220581760995",
-    "project_id": "onnline-notice-board",
-    "storage_bucket": "onnline-notice-board.appspot.com"
+    "project_number": "647401509177",
+    "project_id": "notice-board-c28f7",
+    "storage_bucket": "notice-board-c28f7.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:220581760995:android:f16b73f637a6b7bc699ad6",
+        "mobilesdk_app_id": "1:647401509177:android:addf3d2bec198f9d0e58e8",
         "android_client_info": {
-          "package_name": "com.fuse.notice_board"
+          "package_name": "com.example.notice_board"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyClGflPLDrgChygXfbDxHy6650ex6C8ZBA"
+          "current_key": "AIzaSyCQ3nEx6HvbWAWTR9gCKoZdAnnZPLdmpF0"
         }
       ],
       "services": {
