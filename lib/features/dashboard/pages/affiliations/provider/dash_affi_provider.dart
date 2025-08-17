@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notice_board/core/views/custom_dialog.dart';
 import 'package:notice_board/features/auth/data/user_model.dart';
-
 import 'package:notice_board/features/affiliations/data/affiliation_model.dart';
 import 'package:notice_board/features/affiliations/services/affiliation_services.dart';
 import 'package:notice_board/features/auth/services/user_services.dart';
@@ -60,7 +59,7 @@ class AffiProvider extends StateNotifier<AffiliationFilter> {
     var data = await AffiliationServices.deleteAffiliation(affiliation.id);
     if (data) {
       var update = await UserServices.updateUser(
-          id: affiliation.secreataryId, data: {'role': 'student'});
+          id: affiliation.secretaryId, data: {'role': 'student'});
       CustomDialogs.dismiss();
       ref.read(dashAffiStreamProvider);
       CustomDialogs.toast(
@@ -73,7 +72,6 @@ class AffiProvider extends StateNotifier<AffiliationFilter> {
   }
 }
 
-
 final editAffiliationProvider =
     StateNotifierProvider<EditAffiliation, AffiliationModel>((ref) {
   return EditAffiliation();
@@ -83,21 +81,22 @@ class EditAffiliation extends StateNotifier<AffiliationModel> {
   EditAffiliation()
       : super(AffiliationModel(
             name: '',
-            secreataryName: '',
+            secretaryName: '',
             contact: '',
             id: '',
-            secreataryId: '',
+            secretaryId: '',
             createdAt: DateTime.now().millisecondsSinceEpoch));
 
-void setAffiliation(AffiliationModel affiliation) {
+  void setAffiliation(AffiliationModel affiliation) {
     state = affiliation;
   }
+
   void setName(String name) {
     state = state.copyWith(name: name);
   }
 
   void setScretary(UserModel user) {
-    state = state.copyWith(secreataryName: user.name, secreataryId: user.id);
+    state = state.copyWith(secretaryName: user.name, secretaryId: user.id);
   }
 
   void setContact(String contact) {
@@ -107,20 +106,32 @@ void setAffiliation(AffiliationModel affiliation) {
   void reset() {
     state = AffiliationModel(
         name: '',
-        secreataryName: '',
+        secretaryName: '',
         contact: '',
         id: '',
-        secreataryId: '',
+        secretaryId: '',
         createdAt: DateTime.now().millisecondsSinceEpoch);
   }
 
   void save(WidgetRef ref) async {
     CustomDialogs.loading(message: 'Saving affiliation');
-    var data = await AffiliationServices.updateAffiliation(state.id, state.toMap());
-    
+    //check if affiliation with the same name exists
+    var exist =
+        await AffiliationServices.checkAffiliationExists(state.name, state.id);
+    if (exist) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Affiliation with the same name already exists',
+          type: DialogType.error);
+      return;
+    }
+    var data =
+        await AffiliationServices.updateAffiliation(state.id, state.toMap());
+
     if (data) {
-      //make user a secreatary
-      var update = await UserServices.updateUser(id: state.secreataryId, data: {'role':'secreatary'});
+      //make user a secretary
+      var update = await UserServices.updateUser(
+          id: state.secretaryId, data: {'role': 'Secretary'});
       CustomDialogs.dismiss();
       ref.read(dashAffiStreamProvider);
       CustomDialogs.toast(
@@ -134,7 +145,6 @@ void setAffiliation(AffiliationModel affiliation) {
   }
 }
 
-
 final newAffProvider =
     StateNotifierProvider<NewAffiliation, AffiliationModel>((ref) {
   return NewAffiliation();
@@ -144,18 +154,18 @@ class NewAffiliation extends StateNotifier<AffiliationModel> {
   NewAffiliation()
       : super(AffiliationModel(
             name: '',
-            secreataryName: '',
+            secretaryName: '',
             contact: '',
             id: '',
-            secreataryId: '',
+            secretaryId: '',
             createdAt: DateTime.now().millisecondsSinceEpoch));
 
   void setName(String name) {
     state = state.copyWith(name: name);
   }
 
-  void setScretary(UserModel user) {
-    state = state.copyWith(secreataryName: user.name, secreataryId: user.id);
+  void setSecretary(UserModel user) {
+    state = state.copyWith(secretaryName: user.name, secretaryId: user.id);
   }
 
   void setContact(String contact) {
@@ -165,20 +175,31 @@ class NewAffiliation extends StateNotifier<AffiliationModel> {
   void reset() {
     state = AffiliationModel(
         name: '',
-        secreataryName: '',
+        secretaryName: '',
         contact: '',
         id: '',
-        secreataryId: '',
+        secretaryId: '',
         createdAt: DateTime.now().millisecondsSinceEpoch);
   }
 
   void save(WidgetRef ref) async {
     CustomDialogs.loading(message: 'Saving affiliation');
-    state = state.copyWith(id: AffiliationServices.getAffiliationId(),createdAt: DateTime.now().millisecondsSinceEpoch);
+    //check if affiliation with the same name exists
+    var exist = await AffiliationServices.checkAffiliationExists(state.name, state.id);
+    if (exist) {
+      CustomDialogs.dismiss();
+      CustomDialogs.toast(
+          message: 'Affiliation with the same name already exists',
+          type: DialogType.error);
+      return;
+    }
+    state = state.copyWith(
+        id: AffiliationServices.getAffiliationId(),
+        createdAt: DateTime.now().millisecondsSinceEpoch);
     var data = await AffiliationServices.addAffiliation(state);
     if (data) {
       var update = await UserServices.updateUser(
-          id: state.secreataryId, data: {'role': 'secreatary'});
+          id: state.secretaryId, data: {'role': 'secretary'});
       CustomDialogs.dismiss();
       //ref.read(dashAffiStreamProvider);
       CustomDialogs.toast(

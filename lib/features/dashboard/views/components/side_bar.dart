@@ -49,7 +49,7 @@ class SideBar extends ConsumerWidget {
                     : buildUserManu(ref, context),
           ),
           // footer
-          Text('© 2024 All rights reserved',
+          Text('© 2025 All rights reserved',
               style: styles.body(color: Colors.white38, fontSize: 12)),
         ]));
   }

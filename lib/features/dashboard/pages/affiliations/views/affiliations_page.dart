@@ -128,7 +128,7 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
                   cells: [
                     DataCell(Text('${index + 1}', style: rowStyles)),
                     DataCell(Text(affiliations[index].name, style: rowStyles)),
-                    DataCell(Text(affiliations[index].secreataryName,
+                    DataCell(Text(affiliations[index].secretaryName,
                         style: rowStyles)),
                     DataCell(
                         Text(affiliations[index].contact, style: rowStyles)),
@@ -227,7 +227,7 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
                           if (sec == null) return;
                           var secretary = maergedList
                               .firstWhere((element) => element.name == sec);
-                          notifier.setScretary(secretary);
+                          notifier.setSecretary(secretary);
                         },
                       ),
                     ),
@@ -312,7 +312,7 @@ class _AffiliationsPageState extends ConsumerState<AffiliationsPage> {
                     SizedBox(
                       width: 400,
                       child: CustomDropDown(
-                        //value: provider.secreataryName.isEmpty?null:provider.secreataryName,
+                        //value: provider.secretaryName.isEmpty?null:provider.secretaryName,
                         items: names
                             .map((e) =>
                                 DropdownMenuItem(value: e, child: Text(e)))

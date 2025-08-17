@@ -18,7 +18,7 @@ class FooterPage extends ConsumerWidget {
           Image.asset(Assets.imagesLogoT, height: 30),
           const SizedBox(width: 20),
           const Expanded(
-            child: Text('© 2024 Online Notice Board',
+            child: Text('© 2 Online Notice Board',
                 style: TextStyle(color: Colors.white)),
           ),
         ],

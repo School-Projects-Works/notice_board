@@ -34,28 +34,32 @@ class UserServices {
     }
   }
 
-  static Future<(User?, UserModel?,String)> loginUser(LoginModel user) async {
+  static Future<(User?, UserModel?, String)> loginUser(LoginModel user) async {
     try {
       var userCredential = await _auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
       if (userCredential.user != null) {
-       var user = await _userCollection.doc(userCredential.user!.uid).get();
-       if(user.exists){
-         return (userCredential.user, UserModel.fromMap(user.data()as Map<String, dynamic>),'Login successful');
-        }else{
-          return (null, null,'User not found');
+        var user = await _userCollection.doc(userCredential.user!.uid).get();
+        if (user.exists) {
+          return (
+            userCredential.user,
+            UserModel.fromMap(user.data() as Map<String, dynamic>),
+            'Login successful'
+          );
+        } else {
+          return (null, null, 'User not found');
         }
-         } else {
-        return (null, null,'User not found');
+      } else {
+        return (null, null, 'User not found');
       }
     } on FirebaseAuthException catch (e) {
-      return (null,null, e.message.toString());
+      return (null, null, e.message.toString());
     } catch (e) {
-      return (null, null,e.toString());
+      return (null, null, e.toString());
     }
   }
 
-  static Future<bool>resendEmailVerification(User? user) async{
+  static Future<bool> resendEmailVerification(User? user) async {
     try {
       await user!.sendEmailVerification();
       return true;
@@ -69,7 +73,7 @@ class UserServices {
     }
   }
 
-  static Future<UserModel?>getUserData(String s)async {
+  static Future<UserModel?> getUserData(String s) async {
     try {
       var user = await _userCollection.doc(s).get();
       return UserModel.fromMap(user.data() as Map<String, dynamic>);
@@ -78,7 +82,8 @@ class UserServices {
     }
   }
 
-  static Future<bool>updateUser({required String id, required Map<String, dynamic> data})async {
+  static Future<bool> updateUser(
+      {required String id, required Map<String, dynamic> data}) async {
     try {
       await _userCollection.doc(id).update(data);
       return true;
@@ -87,10 +92,11 @@ class UserServices {
     }
   }
 
-  static Future<String>uploadUserImage(String id, Uint8List image) async{
+  static Future<String> uploadUserImage(String id, Uint8List image) async {
     try {
       var ref = FirebaseStorage.instance.ref().child('users/$id.jpg');
-      var uploadTask = ref.putData(image, SettableMetadata(contentType: 'image/jpg'));
+      var uploadTask =
+          ref.putData(image, SettableMetadata(contentType: 'image/jpg'));
       var url = await (await uploadTask).ref.getDownloadURL();
       return url;
     } on FirebaseException catch (e) {

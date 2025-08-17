@@ -182,7 +182,7 @@ class LoginProvider extends StateNotifier<LoginModel> {
       message: 'Logging in...',
     );
     var (user, userModel, message) = await UserServices.loginUser(state);
-    if (user != null && user.emailVerified || (userModel!.role == 'admin')) {
+    if (user != null && user.emailVerified || (userModel != null && userModel!.role == 'admin')) {
       if (userModel == null) {
         CustomDialogs.dismiss();
         CustomDialogs.toast(

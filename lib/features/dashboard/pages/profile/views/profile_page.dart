@@ -125,6 +125,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             items: items
                                 .map((e) =>
                                     DropdownMenuItem(value: e, child: Text(e)))
+                                .toList()
+                                .toSet()
                                 .toList(),
                             label: 'Select Affiliation',
                             onChanged: (value) {

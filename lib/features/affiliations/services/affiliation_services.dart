@@ -49,4 +49,17 @@ static String getAffiliationId() {
   static Stream<List<AffiliationModel>> streamAffiliations() {
     return _firestore.collection('affiliations').snapshots().map((event) => event.docs.map((e) => AffiliationModel.fromMap(e.data())).toList());
   }
+
+  static Future<bool> checkAffiliationExists(String name, String id) async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('affiliations')
+          .where('name', isEqualTo: name)
+          .where('id', isNotEqualTo: id)
+          .get();
+          //check if affiliation with the same name but different id exists
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
+  }
 }
